@@ -1,119 +1,54 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity"
-    >
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                tools:context=".MainActivity">
 
-    <ScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/scrollView"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/activity_vertical_margin"
-            android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity"
-            >
-
-            <Button
-                android:layout_width="wrap_content"
+   <!-- Inset displaying current air quality info -->
+   <TableLayout android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Map"
-                android:id="@+id/map_btn"
-                android:layout_above="@+id/input_condition"
-                android:layout_toRightOf="@+id/sanpshot_btn"
-                android:layout_toEndOf="@+id/sanpshot_btn" />
+                android:layout_centerInParent="true"
+                android:typeface="sans"
+                android:textSize="24sp"
+                android:contentDescription="@string/mainScreen_airQualityInset_desc"
+                android:id="@+id/mainScreen_airQualityInset"
+                android:background="#bbbbbb"
+                android:textColor="#000000"
+                android:padding="@dimen/mainScreen_airQualityInset_padding"/>
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Snapshot from Arduino"
-                android:id="@+id/sanpshot_btn"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
+   <!-- Button to refresh AQ data -->
+   <Button android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_alignParentBottom="true"
+           android:layout_alignParentRight="true"
+           android:text="@string/mainScreen_refresh_button"
+           android:onClick="on_MainScreen_refresh_button_Click"
+           android:textSize="24sp"
+           android:layout_gravity="center"/>
 
-            <TextView android:text="@string/input_condition" android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/input_condition"
-                android:layout_below="@+id/sanpshot_btn"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:textSize="25dp"
-                android:layout_marginTop="12dp" />
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="1.Irritated Lungs - (Coughing/Wheezing)"
-                android:id="@+id/text_irritated_lungs"
-                android:layout_below="@+id/input_condition"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:textSize="20dp"
-                android:textColor="#0000FF"
-                android:layout_marginTop="12dp"/>
-
-            <SeekBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/seekBar_irritated_lungs"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_below="@+id/text_irritated_lungs" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="2.Sneezing"
-                android:id="@+id/text_sneezing"
-                android:layout_below="@+id/seekBar_irritated_lungs"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:textSize="20dp"
-                android:textColor="#0000FF"
-                android:layout_marginTop="12dp"/>
-
-            <SeekBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/seekBar_sneezing"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_below="@+id/text_sneezing" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Save data"
-                android:id="@+id/button_save_data"
-                android:layout_below="@+id/seekBar_sneezing"
-                android:layout_marginTop="12dp" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Contribute data"
-                android:id="@+id/button_contribute_data"
-                android:layout_below="@+id/seekBar_sneezing"
-                android:layout_toRightOf="@id/button_save_data"
-                android:layout_marginTop="12dp" />
+   <!-- Button to take an EMA -->
+   <Button android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_alignParentBottom="true"
+           android:layout_alignParentLeft="true"
+           android:text="@string/mainScreen_EMA_button"
+           android:onClick="on_MainScreen_EMA_button_Click"
+           android:textSize="24sp"
+           android:layout_gravity="center"/>
 
 
-        </RelativeLayout>
-  </ScrollView>
-
+   <!-- Button to view user history -->
+   <Button android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_alignParentBottom="true"
+           android:layout_centerHorizontal="true"
+           android:text="@string/mainScreen_hist_button"
+           android:onClick="on_MainScreen_hist_button_Click"
+           android:textSize="24sp"
+           android:layout_gravity="center"/>
 
 </RelativeLayout>

@@ -1,7 +1,61 @@
 <resources>
-    <string name="app_name">AirMonitor</string>
+   <string name="app_name">AirMonitor</string>
 
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
-    <string name="input_condition">Please input the condition:</string>
+   <string name="action_settings">Settings</string>
+
+   <string name="mainScreen_airQualityInset_desc">Live-streamed air quality info</string>
+   <string name="mainScreen_airQualityInset_no_data">No data</string>
+   <string name="mainScreen_airQualityInset_data_header">Air Quality</string>
+   <string name="mainScreen_EMA_button">EMA</string>
+   <string name="mainScreen_hist_button">History</string>
+
+   <string name="title_activity_ema">Ecological Momentary Assessment</string>
+
+   <string name="mainScreen_refresh_button">Refresh</string>
+
+   <string name="input_condition">Please input the condition:</string>
+
+   <string name="ema_screen_location_header">Location</string>
+   <string name="ema_screen_in_or_out_text">Are you indoors or outdoors?</string>
+   <string name="ema_screen_in_radio_label">In</string>
+   <string name="ema_screen_out_radio_label">Out</string>
+   <string name="ema_screen_where_text">Where are you?</string>
+   <string name="ema_screen_where_hint">location</string>
+   <string name="ema_screen_what_text">What are you doing?</string>
+   <string name="ema_screen_what_hint">activity</string>
+   <string name="ema_screen_who_text">Who are you with?</string>
+   <string name="ema_screen_who_hint">companions</string>
+   <string name="ema_screen_aq_header">Air quality</string>
+   <string name="ema_screen_aq_awareness">Awareness: What do you think your current air quality?</string>
+   <string name="ema_screen_aq_belief">Belief: How strongly do you believe the air quality could hurt your health?</string>
+   <string name="ema_screen_aq_intent">Intention: How likely are you to change location to get to cleaner air?</string>
+   <string name="ema_screen_aq_behave">Behavior: Since the last report, did you change location to get to cleaner air?</string>
+   <string name="ema_screen_aq_behave_yes_text">Yes</string>
+   <string name="ema_screen_aq_behave_no_text">No</string>
+   <string name="ema_screen_aq_barrier">Barriers: If you did not move to get to cleaner air but wanted to, what got in the way?</string>
+   <string name="ema_screen_aq_barrier_hint">barriers</string>
+   <string name="ema_screen_save_button">Save</string>
+   <string name="ema_screen_cancel_button">Cancel</string>
+
+   <string name="ema_screen_existing_header">Existing conditions</string>
+   <string name="ema_screen_aq_existing_hint">existing condition</string>
+   <string name="ema_screen_existing_add_button">Add</string>
+
+   <string name="title_activity_history">User History</string>
+   <string name="history_screen_userid">User id:</string>
+   <string name="history_screen_sensor_label">Sensor data</string>
+   <string name="history_screen_ema_label">EMA</string>
+   <string name="history_screen_condition_label">Existing conditions</string>
+   <string name="history_screen_no_data">No data</string>
+   <string name="history_screen_no_conds">No existing conditions</string>
+
+   <string name="history_screen_ema_indoors_label">Indoors</string>
+   <string name="history_screen_ema_reportedLocation_label">Reported location</string>
+   <string name="history_screen_ema_activity_label">Activity</string>
+   <string name="history_screen_ema_companion_label">Companions</string>
+   <string name="history_screen_ema_airQuality_label">Air quality</string>
+   <string name="history_screen_ema_belief_label">Belief</string>
+   <string name="history_screen_ema_behavior_label">Behavior</string>
+   <string name="history_screen_ema_barrier_label">Barrier</string>
+
 </resources>

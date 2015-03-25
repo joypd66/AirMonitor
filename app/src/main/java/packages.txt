@@ -1,0 +1,4 @@
+jimjams.airmonitor
+jimjams.airmonitor.database
+jimjams.airmonitor.datastructure
+jimjams.airmonitor.sensordata
