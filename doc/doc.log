@@ -1,22 +1,22 @@
 Loading source files for package jimjams.airmonitor...
 [parsing started RegularFileObject[.\jimjams\airmonitor\EMAActivity.java]]
-[parsing completed 78ms]
+[parsing completed 62ms]
 [parsing started RegularFileObject[.\jimjams\airmonitor\HistoryActivity.java]]
-[parsing completed 15ms]
+[parsing completed 32ms]
 [parsing started RegularFileObject[.\jimjams\airmonitor\MainActivity.java]]
-[parsing completed 16ms]
+[parsing completed 0ms]
 Loading source files for package jimjams.airmonitor.database...
 [parsing started RegularFileObject[.\jimjams\airmonitor\database\AMDBContract.java]]
-[parsing completed 0ms]
+[parsing completed 15ms]
 [parsing started RegularFileObject[.\jimjams\airmonitor\database\DBAccess.java]]
-[parsing completed 47ms]
+[parsing completed 16ms]
 Loading source files for package jimjams.airmonitor.datastructure...
 [parsing started RegularFileObject[.\jimjams\airmonitor\datastructure\EcologicalMomentaryAssessment.java]]
-[parsing completed 0ms]
+[parsing completed 16ms]
 [parsing started RegularFileObject[.\jimjams\airmonitor\datastructure\Profile.java]]
-[parsing completed 16ms]
+[parsing completed 0ms]
 [parsing started RegularFileObject[.\jimjams\airmonitor\datastructure\Snapshot.java]]
-[parsing completed 16ms]
+[parsing completed 0ms]
 Loading source files for package jimjams.airmonitor.sensordata...
 [parsing started RegularFileObject[.\jimjams\airmonitor\sensordata\SensorData.java]]
 [parsing completed 0ms]
@@ -449,6 +449,6 @@ Generating C:\android\projects\AirMonitor\doc\allclasses-noframe.html...
 Generating C:\android\projects\AirMonitor\doc\index.html...
 Generating C:\android\projects\AirMonitor\doc\overview-summary.html...
 Generating C:\android\projects\AirMonitor\doc\help-doc.html...
-[done in 3354 ms]
+[done in 3050 ms]
 4 errors
 94 warnings

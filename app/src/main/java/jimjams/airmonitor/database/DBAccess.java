@@ -48,7 +48,7 @@ public class DBAccess implements AMDBContract {
     */
    private DBAccess() {
 
-      File path = new File(DB_PATH);
+      File path = new File(DB_DIR);
 
 /*
       Log.d(className, "Path: " + path.getAbsolutePath());
