@@ -21,7 +21,8 @@
                 android:padding="@dimen/mainScreen_airQualityInset_padding"/>
 
    <!-- Button to refresh AQ data -->
-   <Button android:layout_width="wrap_content"
+
+    <Button android:layout_width="wrap_content"
            android:layout_height="wrap_content"
            android:layout_alignParentBottom="true"
            android:layout_alignParentRight="true"
@@ -41,6 +42,7 @@
            android:layout_gravity="center"/>
 
 
+
    <!-- Button to view user history -->
    <Button android:layout_width="wrap_content"
            android:layout_height="wrap_content"
@@ -50,5 +52,26 @@
            android:onClick="on_MainScreen_hist_button_Click"
            android:textSize="24sp"
            android:layout_gravity="center"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <Button android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:text="@string/mainScreen_Bluetooth_button"
+            android:onClick="on_MainScreen_Bluetooth_button_Click"
+            android:textSize="24sp"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/button" />
+    </LinearLayout>
+
+    <!-- Button to take an Bluetooth -->
 
 </RelativeLayout>

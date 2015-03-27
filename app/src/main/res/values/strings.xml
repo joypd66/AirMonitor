@@ -8,6 +8,8 @@
    <string name="mainScreen_airQualityInset_data_header">Air Quality</string>
    <string name="mainScreen_EMA_button">EMA</string>
    <string name="mainScreen_hist_button">History</string>
+   <string name="mainScreen_Bluetooth_button">Bluetooth</string>
+
 
    <string name="title_activity_ema">Ecological Momentary Assessment</string>
 
@@ -58,5 +60,11 @@
    <string name="history_screen_ema_intention_label">Intention</string>
    <string name="history_screen_ema_behavior_label">Behavior</string>
    <string name="history_screen_ema_barrier_label">Barrier</string>
+
+    <string name="turnOn">Turn Bluetooth On</string>
+    <string name="turnOff">Turn Bluetooth Off</string>
+    <string name="showPaired">Show Paired Devices</string>
+    <string name="search">Search New Devices / Cancel Search</string>
+    <string name="makeDisc">Make Device Discoverable</string>
 
 </resources>

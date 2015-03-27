@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/turnOn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/turnOn"/>
+
+    <Button
+        android:id="@+id/turnOff"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/turnOff"/>
+
+    <Button
+        android:id="@+id/showPaired"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/showPaired" />
+
+    <Button
+        android:id="@+id/search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/search"/>
+
+    <!--This button is not needed in our project right now
+    <Button
+        android:id="@+id/makeDisc"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/makeDisc"/>
+    -->
+
+    <ListView
+        android:id="@+id/listViewPaired"
+        android:layout_width="match_parent"
+        android:layout_height="180dp">
+    </ListView>
+
+    <ListView
+        android:id="@+id/listViewDetected"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </ListView>
+</LinearLayout>
