@@ -55,6 +55,7 @@
    <string name="history_screen_ema_companion_label">Companions</string>
    <string name="history_screen_ema_airQuality_label">Air quality</string>
    <string name="history_screen_ema_belief_label">Belief</string>
+   <string name="history_screen_ema_intention_label">Intention</string>
    <string name="history_screen_ema_behavior_label">Behavior</string>
    <string name="history_screen_ema_barrier_label">Barrier</string>
 

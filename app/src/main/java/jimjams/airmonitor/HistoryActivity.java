@@ -261,6 +261,8 @@ public class HistoryActivity extends ActionBarActivity {
                String.valueOf(ema.getAirQuality())));
          emaTable.addView(makeTableRow(getResources().getString(R.string.history_screen_ema_belief_label),
                String.valueOf(ema.getBelief())));
+         emaTable.addView(makeTableRow(getResources().getString(R.string.history_screen_ema_intention_label),
+               String.valueOf(ema.getIntention())));
          emaTable.addView(makeTableRow(getResources().getString(R.string.history_screen_ema_behavior_label),
                String.valueOf(ema.getBehavior())));
          emaTable.addView(makeTableRow(getResources().getString(R.string.history_screen_ema_barrier_label),
