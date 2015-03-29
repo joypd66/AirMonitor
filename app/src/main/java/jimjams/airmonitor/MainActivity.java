@@ -130,4 +130,13 @@ public class MainActivity extends ActionBarActivity {
       Intent intent = new Intent(this, HistoryActivity.class);
       startActivity(intent);
    }
+
+    /**
+     * Invoked when the history button on the main screen is clicked.
+     * @param blueBtn The history button on the main screen
+     */
+    public void on_MainScreen_Bluetooth_button_Click(View blueBtn) {
+        Intent intent = new Intent(this, BluetoothActivity.class);
+        startActivity(intent);
+    }
 }

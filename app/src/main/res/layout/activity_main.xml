@@ -57,7 +57,7 @@
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        
+
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
@@ -68,8 +68,7 @@
             android:text="@string/mainScreen_Bluetooth_button"
             android:onClick="on_MainScreen_Bluetooth_button_Click"
             android:textSize="24sp"
-            android:layout_gravity="center_horizontal"
-            android:id="@+id/button" />
+            android:layout_gravity="center_horizontal"/>
     </LinearLayout>
 
     <!-- Button to take an Bluetooth -->

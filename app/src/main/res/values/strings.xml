@@ -61,6 +61,7 @@
    <string name="history_screen_ema_behavior_label">Behavior</string>
    <string name="history_screen_ema_barrier_label">Barrier</string>
 
+    <string name="title_activity_bluetooth">Bluetooth</string>
     <string name="turnOn">Turn Bluetooth On</string>
     <string name="turnOff">Turn Bluetooth Off</string>
     <string name="showPaired">Show Paired Devices</string>
