@@ -12,16 +12,17 @@
                 android:background="#ffbaffaa">
 
    <!-- Inset displaying current air quality info -->
-   <TableLayout android:layout_width="wrap_content"
+   <TableLayout android:id="@+id/mainScreen_airQualityInset"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
                 android:typeface="sans"
-                android:textSize="24sp"
+                android:textSize="30sp"
                 android:contentDescription="@string/mainScreen_airQualityInset_desc"
-                android:id="@+id/mainScreen_airQualityInset"
                 android:background="#bbbbbb"
                 android:textColor="#000000"
-                android:padding="@dimen/mainScreen_airQualityInset_padding"/>
+                android:layout_alignParentTop="true"
+                android:padding="@dimen/mainScreen_airQualityInset_padding"
+                android:layout_centerHorizontal="true"/>
 
    <!-- Button to refresh AQ data -->
     <info.hoang8f.widget.FButton
