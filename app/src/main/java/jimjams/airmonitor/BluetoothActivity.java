@@ -390,11 +390,18 @@ public class BluetoothActivity extends ActionBarActivity {
         return socket;
     }//end createSocket class
 
-//    @Override
-//    protected void onDestroy() {
-//        //TODO Auto-generated method stub
-//        super.onDestroy();
-//        //Unregister receiver
-//        unregisterReceiver(bluetoothReceiver);
-//    }//end onDestroy method
+    @Override
+    protected void onDestroy() {
+        //TODO Auto-generated method stub
+        super.onDestroy();
+        try{
+            //Unregister receiver
+            unregisterReceiver(bluetoothReceiver);
+        }
+        catch(Exception e){
+
+            e.printStackTrace();
+        }//end catch method
+
+    }//end onDestroy method
 }
