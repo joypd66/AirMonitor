@@ -29,7 +29,7 @@ public class MainActivity extends ActionBarActivity {
    /**
     * Font size
     */
-   final private static float FONT_SIZE = 16;
+   final private static float FONT_SIZE = 22;
 
    @Override
    protected void onCreate(Bundle savedInstanceState) {
@@ -92,10 +92,10 @@ public class MainActivity extends ActionBarActivity {
             TableRow tr = new TableRow(this);
             TextView label = new TextView(this), value = new TextView(this);
             label.setText(sd.getDisplayName());
-            label.setPadding(2, 2, 15, 2);
+            label.setPadding(1, 1, 15, 1);
             label.setTextSize(FONT_UNIT, FONT_SIZE);
             value.setText(sd.getDisplayValue());
-            value.setPadding(15, 2, 2, 2);
+            value.setPadding(15, 1, 1, 1);
             value.setGravity(Gravity.END);
             value.setTextSize(FONT_UNIT, FONT_SIZE);
             tr.addView(label);
