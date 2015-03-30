@@ -14,7 +14,7 @@
    <!-- Inset displaying current air quality info -->
    <TableLayout android:id="@+id/mainScreen_airQualityInset"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+                android:layout_height="wrap_content"
                 android:typeface="sans"
                 android:textSize="20sp"
                 android:contentDescription="@string/mainScreen_airQualityInset_desc"
