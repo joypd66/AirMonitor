@@ -1,6 +1,8 @@
 package jimjams.airmonitor;
 
+import android.app.ActionBar;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -29,7 +31,9 @@ public class MainActivity extends ActionBarActivity {
    /**
     * Font size
     */
-   final private static float FONT_SIZE = 16;
+   final private static float FONT_SIZE = 22;
+
+
 
    @Override
    protected void onCreate(Bundle savedInstanceState) {
@@ -92,10 +96,10 @@ public class MainActivity extends ActionBarActivity {
             TableRow tr = new TableRow(this);
             TextView label = new TextView(this), value = new TextView(this);
             label.setText(sd.getDisplayName());
-            label.setPadding(2, 2, 15, 2);
+            label.setPadding(1, 1, 15, 1);
             label.setTextSize(FONT_UNIT, FONT_SIZE);
             value.setText(sd.getDisplayValue());
-            value.setPadding(15, 2, 2, 2);
+            value.setPadding(15, 1, 1, 1);
             value.setGravity(Gravity.END);
             value.setTextSize(FONT_UNIT, FONT_SIZE);
             tr.addView(label);
@@ -130,4 +134,13 @@ public class MainActivity extends ActionBarActivity {
       Intent intent = new Intent(this, HistoryActivity.class);
       startActivity(intent);
    }
+
+    /**
+     * Invoked when the history button on the main screen is clicked.
+     * @param blueBtn The history button on the main screen
+     */
+    public void on_MainScreen_Bluetooth_button_Click(View blueBtn) {
+        Intent intent = new Intent(this, BluetoothActivity.class);
+        startActivity(intent);
+    }
 }

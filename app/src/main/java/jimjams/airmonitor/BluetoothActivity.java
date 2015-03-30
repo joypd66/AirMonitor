@@ -61,7 +61,7 @@ public class BluetoothActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_bluetooth);
 
         //declare a bluetoothAdapter
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
