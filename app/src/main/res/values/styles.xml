@@ -1,8 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
 <resources>
 
    <!-- Base application theme. -->
    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
       <!-- Customize your theme here. -->
-   </style>
+
+    </style>
+
+    <!-- 继承AppCompat.Light，覆盖actionBarStyle -->
+    <style name="CustomActionBarTheme" parent="@style/Theme.AppCompat.Light">
+        <item name="android:actionBarStyle">@style/BarStyle</item>
+
+        <!-- Support library compatibility -->
+        <item name="actionBarStyle">@style/BarStyle</item>
+    </style>
+
+    <!-- 继承AppCompat.ActionBar，覆盖background，titleTextStyle -->
+    <style name="BarStyle" parent="@style/Widget.AppCompat.ActionBar">
+        <item name="android:background">#ff880077</item>
+        <item name="android:titleTextStyle">@style/TitleTextStyle</item>
+
+        <!-- Support library compatibility -->
+        <item name="titleTextStyle">@style/TitleTextStyle</item>
+    </style>
+
+    <!-- 继承AppCompat.Title，覆盖textColor -->
+    <style name="TitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">#ff880077</item>
+        <item name="android:textStyle"> italic</item>
+        <item name="android:textSize"> 25dp </item>
+
+
+    </style>
+
 
 </resources>
