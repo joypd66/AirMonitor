@@ -45,6 +45,7 @@
 
    <string name="title_activity_history">User History</string>
    <string name="history_screen_userid">User id:</string>
+   <string name="history_screen_location_label">Location</string>
    <string name="history_screen_sensor_label">Sensor data</string>
    <string name="history_screen_ema_label">EMA</string>
    <string name="history_screen_condition_label">Existing conditions</string>

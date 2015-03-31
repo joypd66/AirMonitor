@@ -1,8 +1,6 @@
 package jimjams.airmonitor;
 
-import android.app.ActionBar;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -32,8 +30,6 @@ public class MainActivity extends ActionBarActivity {
     * Font size
     */
    final private static float FONT_SIZE = 22;
-
-
 
    @Override
    protected void onCreate(Bundle savedInstanceState) {

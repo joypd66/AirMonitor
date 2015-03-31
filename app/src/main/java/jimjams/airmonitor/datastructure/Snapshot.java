@@ -20,7 +20,7 @@ public class Snapshot {
    /**
     * The ID of the user to whom this Snapshot belongs
     */
-   long userId;
+   private long userId;
 
    /**
     * The time when the Snapshot was taken
@@ -66,9 +66,12 @@ public class Snapshot {
          LocationManager manager =
                (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
          List<String> providers = manager.getAllProviders();
-         // Just take the first one on the list...
-         String provider = providers.get(0);
-         location = manager.getLastKnownLocation(provider);
+         try {
+            location = manager.getLastKnownLocation("gps");
+         }
+         catch(SecurityException | IllegalArgumentException e) {
+            location = manager.getLastKnownLocation(providers.get(0));
+         }
          timestamp = new Date(location.getTime());
       }
       catch(NullPointerException | IndexOutOfBoundsException | SecurityException |
