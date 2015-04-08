@@ -1,5 +1,6 @@
 package jimjams.airmonitor;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -45,6 +47,11 @@ public class HistoryActivity extends ActionBarActivity {
     * Value used to indent a subcategory under its parent
     */
    private static final int INDENT = 30;
+
+   /**
+    * Used to format latitude and longitude
+    */
+   private DecimalFormat df = new DecimalFormat("0.00");
 
    /**
     * Used to identify source class for log
@@ -153,6 +160,52 @@ public class HistoryActivity extends ActionBarActivity {
          //*****************************************************************************************
 
          // Create a LinearLayout for each category under Snapshot
+         // Layout for location
+         Location location = snapshot.getLocation();
+
+         // Must be instantiated in this scope so that listener can be added
+         TextView locationLabel = null;
+         if(location != null) {
+            LinearLayout locationLayout = new LinearLayout(this);
+            locationLayout.setOrientation(LinearLayout.VERTICAL);
+
+            locationLayout.setPadding(individualSnapshotLayout.getPaddingLeft() + INDENT,
+                  individualSnapshotLayout.getPaddingTop(),
+                  individualSnapshotLayout.getPaddingRight(),
+                  individualSnapshotLayout.getPaddingBottom());
+
+            // Tag is a list of expandable/collapsible child component
+            locationLayout.setTag(new ArrayList<View>());
+
+            // Add this layout to the parent's tag
+            ((List<View>)individualSnapshotLayout.getTag()).add(locationLayout);
+
+            // Label for the location data
+            locationLabel = new TextView(this);
+            locationLabel.setText(R.string.history_screen_location_label);
+            locationLabel.setTextSize(FONT_UNIT, LABEL_FONT_SIZE);
+            locationLayout.addView(locationLabel);
+
+            // Tag is true if following siblings are displayed
+            locationLabel.setTag(false);
+
+            // TableLayout to display location data
+            TableLayout locationTable = new TableLayout(this);
+            locationTable.setPadding(locationTable.getPaddingLeft() + INDENT,
+                  locationTable.getPaddingTop(), locationTable.getPaddingRight(),
+                  locationTable.getPaddingBottom());
+
+            // Add this layout to the parent's tag
+            ((List<View>)locationLayout.getTag()).add(locationTable);
+
+            // Populate the table
+            Log.d(className, "Adding lat=" + location.getLatitude() + " long=" + location.getLongitude());
+            locationTable.addView(makeTableRow("latitude", df.format(location.getLatitude())));
+            locationTable.addView(makeTableRow("longitude", df.format(location.getLongitude())));
+         } // if location != null
+
+         //*****************************************************************************************
+
          // Layout for sensor data
          LinearLayout sensorLayout = new LinearLayout(this);
          sensorLayout.setOrientation(LinearLayout.VERTICAL);
@@ -328,6 +381,9 @@ public class HistoryActivity extends ActionBarActivity {
          ExpansionListener listener = new ExpansionListener();
 
          individualSnapshotLabel.setOnClickListener(listener);
+         if(locationLabel != null) {
+            locationLabel.setOnClickListener(listener);
+         }
          sensorLabel.setOnClickListener(listener);
          emaLabel.setOnClickListener(listener);
          conditionLabel.setOnClickListener(listener);
