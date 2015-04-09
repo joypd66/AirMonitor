@@ -189,8 +189,11 @@ public class DBAccess implements AMDBContract {
       ContentValues cv = new ContentValues(SnapshotTable.COLUMNS.length - 1);
       cv.put("userId", Profile.getProfile().getId());
       cv.put("timestamp", snapshot.getTimestamp().getTime());
-      if(snapshot.getLocation() != null) {
-         cv.put("location", snapshot.getLocation().toString());
+      Location loc = snapshot.getLocation();
+      if(loc != null) {
+         cv.put("latitude", loc.getLatitude());
+         cv.put("longitude", loc.getLongitude());
+         cv.put("provider", loc.getProvider());
       }
       cv.put("sensorData", sensorIdString);
       cv.put("conditions", conditionString);
@@ -325,8 +328,40 @@ public class DBAccess implements AMDBContract {
          long userId = cursor.getLong(cursor.getColumnIndex("userId"));
          Date timestamp = new Date(cursor.getLong(cursor.getColumnIndex("timestamp")));
 
-         // Location is giving me trouble, so for now it is just null
+         // Construct the Location, if possible
          Location location = null;
+
+         try {
+            int provIndex = cursor.getColumnIndex("provider");
+            if(provIndex > -1) {
+               location = new Location(cursor.getString(provIndex));
+            }
+
+            int latIndex = cursor.getColumnIndex("latitude");
+            if(latIndex > -1) {
+               location.setLatitude(cursor.getDouble(latIndex));
+            }
+
+            int longIndex = cursor.getColumnIndex("longitude");
+            if(longIndex > -1) {
+               location.setLongitude(cursor.getDouble(longIndex));
+            }
+
+            int altIndex = cursor.getColumnIndex("altitude");
+            if(altIndex > -1) {
+               location.setAltitude(cursor.getDouble(altIndex));
+            }
+
+            int accIndex = cursor.getColumnIndex("accuracy");
+            if(accIndex > -1) {
+               location.setAccuracy(cursor.getFloat(accIndex));
+            }
+
+            location.setTime(timestamp.getTime());
+         }
+         catch(Exception e) {
+            location = null;
+         }
 
          // Get sensor data. This involves getting a semicolon-separated String from the DB, converting
          // it into a List of Longs, and constructing individual SensorData objects from the

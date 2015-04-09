@@ -130,8 +130,16 @@ public interface AMDBContract {
     *    <dd>ID of the user creating the Snapshot</dd>
     *    <dt>timestamp</dt>
     *    <dd>The time when the Snapshot was taken. Stored as a long</dd>
-    *    <dt>location</dt>
-    *    <dd>Location where the Snapshot was taken</dd>
+    *    <dt>latitude</dt>
+    *    <dd>Latitude where the Snapshot was taken</dd>
+    *    <dt>longitude</dt>
+    *    <dd>Longitude where the Snapshot was taken</dd>
+    *    <dt>altitude</dt>
+    *    <dd>Altitude at which the Snapshot was taken</dd>
+    *    <dt>accuracy</dt>
+    *    <dd>The estimated accuracy of this location, in meters</dd>
+    *    <dt>provider</dt>
+    *    <dd>The Provider of the Location</dd>
     *    <dt>sensorDataSensor</dt>
     *    <dd>Sensor Data at the time when the Snapshot was taken. This is a reference to the IDs
     *        of the corresponding records in the SensorData table.</dd>
@@ -156,7 +164,11 @@ public interface AMDBContract {
          { "id", "INTEGER PRIMARY KEY AUTOINCREMENT" },
          { "userId", "INTEGER" },
          { "timestamp", "INTEGER" },
-         { "location", "TEXT" },
+         { "latitude", "REAL" },
+         { "longitude", "REAL" },
+         { "altitude", "REAL" },
+         { "accuracy", "REAL" },
+         { "provider", "TEXT"},
          { "sensorData", "TEXT" },
          { "conditions", "TEXT" },
          { "ema", "INTEGER" }

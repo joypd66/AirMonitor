@@ -16,5 +16,3 @@ for %%f in ("%target%*.*") do (del /q "%%f")
 for /d %%d in ("%target%*") do (rd /q /s "%%d")
 
 javadoc -private -verbose -d %target% -link %javalink% -linkoffline %androidlink% %androidpackages% @packages.txt > "%log%" 2>&1
-
-pause
