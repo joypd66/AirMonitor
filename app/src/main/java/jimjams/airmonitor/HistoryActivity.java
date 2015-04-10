@@ -122,6 +122,7 @@ public class HistoryActivity extends ActionBarActivity {
       TextView userIdRow = new TextView(this);
       userIdRow.setText("User ID: " + userId);
       userIdRow.setTextSize(FONT_UNIT, LABEL_FONT_SIZE);
+      //userIdRow.setTextColor();
       layout.addView(userIdRow);
 
       // Add a row for each Snapshot
