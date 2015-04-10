@@ -8,9 +8,7 @@ import android.location.Location;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 import jimjams.airmonitor.datastructure.EcologicalMomentaryAssessment;
 import jimjams.airmonitor.datastructure.Profile;
@@ -118,7 +116,7 @@ public class DBAccess implements AMDBContract {
       Profile profile = Profile.getProfile();
       ContentValues cv = new ContentValues(2);
       cv.put("id", profile.getId());
-      List<String> conditions = profile.getConditions();
+      ArrayList<String> conditions = profile.getConditions();
       cv.put("conditions", flatten(conditions));
       database.insertWithOnConflict(ProfileTable.TABLE_NAME, null, cv,
             SQLiteDatabase.CONFLICT_REPLACE);
@@ -129,9 +127,9 @@ public class DBAccess implements AMDBContract {
     * @param data The set of SensorData to be saved
     * @return IDs of the records inserted into the table
     */
-   public List<Long> saveSensorData(List<SensorData> data) {
+   public ArrayList<Long> saveSensorData(ArrayList<SensorData> data) {
       // Create array of IDs to be used for this set of data
-      List<Long> ids = new ArrayList<>(data.size());
+      ArrayList<Long> ids = new ArrayList<>(data.size());
 
       // Insert a new row into the table
       for(int i = 0; i < data.size(); i++) {
@@ -170,14 +168,14 @@ public class DBAccess implements AMDBContract {
 
    public long saveSnapshot(Snapshot snapshot) {
       // Save data structures from Snapshot
-      List<SensorData> data = snapshot.getData();
+      ArrayList<SensorData> data = snapshot.getData();
 
       // Save this set of data to the database and get their IDs
-      List<Long> sensorIds = saveSensorData(data);
+      ArrayList<Long> sensorIds = saveSensorData(data);
       String sensorIdString = flatten(sensorIds);
 
       // Get existing conditions as a String
-      List<String> conditions = snapshot.getConditions();
+      ArrayList<String> conditions = snapshot.getConditions();
       String conditionString = flatten(conditions);
 
       // Save the EMA and get its ID
@@ -208,7 +206,7 @@ public class DBAccess implements AMDBContract {
     * @param list The List
     * @return List, as a single String
     */
-   private static String flatten(List list) {
+   private static String flatten(ArrayList list) {
       String result = "";
       for(int i = 0; i < list.size(); i++) {
          if(i > 0) {
@@ -252,10 +250,10 @@ public class DBAccess implements AMDBContract {
     * @return A List of existing conditions
     * @throws SQLiteFullException
     */
-   public List<String> getProfileConditions() throws SQLiteFullException {
+   public ArrayList<String> getProfileConditions() throws SQLiteFullException {
       Cursor cursor = database.rawQuery("SELECT conditions FROM " + ProfileTable.TABLE_NAME, null);
       cursor.moveToFirst();
-      List<String> conditions;
+      ArrayList<String> conditions;
       if(cursor.getCount() == 0) {
          conditions = new ArrayList<>();
          // Log.d(className, "No profile in database.");
@@ -263,7 +261,13 @@ public class DBAccess implements AMDBContract {
       else if(cursor.getCount() == 1) {
          String conditionString = cursor.getString(0);
          String[] conditionStrings = conditionString.split(ARRAY_SEPARATOR);
-         conditions = Arrays.asList(conditionStrings);
+
+         // Populate manually to ensure you have an ArrayList, as not all List implementations
+         // support the remove(E) method
+         conditions = new ArrayList<>(conditionStrings.length);
+         for(String condString: conditionStrings) {
+            conditions.add(condString);
+         }
       }
       else {
          throw new SQLiteFullException("Too many Profiles in database.");
@@ -300,10 +304,10 @@ public class DBAccess implements AMDBContract {
     * @param userId The ID of the user
     * @return All Snapshots in the database
     */
-   public List<Snapshot> getSnapshots(long userId) {
+   public ArrayList<Snapshot> getSnapshots(long userId) {
       Cursor cursor = database.rawQuery("SELECT * FROM " + SnapshotTable.TABLE_NAME +
             " WHERE userId = " + userId, null);
-      List<Snapshot> snaps = new ArrayList<>(cursor.getCount());
+      ArrayList<Snapshot> snaps = new ArrayList<>(cursor.getCount());
       if(cursor.getCount() > 0) {
          while(cursor.moveToNext()) {
             snaps.add(getSnapshot(cursor.getInt(cursor.getColumnIndex("id"))));
@@ -367,10 +371,10 @@ public class DBAccess implements AMDBContract {
          // it into a List of Longs, and constructing individual SensorData objects from the
          // sensorData table using these IDs.
          String flatSensorData = cursor.getString(cursor.getColumnIndex("sensorData"));
-         List<Long> sensorDataIds = inflateLong(flatSensorData);
-         List<SensorData> data = getSensorData(sensorDataIds);
+         ArrayList<Long> sensorDataIds = inflateLong(flatSensorData);
+         ArrayList<SensorData> data = getSensorData(sensorDataIds);
          String flatConditions = cursor.getString(cursor.getColumnIndex("conditions"));
-         List<String> conditions = inflateString(flatConditions);
+         ArrayList<String> conditions = inflateString(flatConditions);
          long emaId = cursor.getInt(cursor.getColumnIndex("ema"));
          EcologicalMomentaryAssessment ema = getEMA(emaId);
 
@@ -395,7 +399,7 @@ public class DBAccess implements AMDBContract {
          String reportedLocation = cursor.getString(cursor.getColumnIndex("reportedLocation"));
          String activity = cursor.getString(cursor.getColumnIndex("activity"));
          String flatCompanions = cursor.getString(cursor.getColumnIndex("companions"));
-         List<String> companions = inflateString(flatCompanions);
+         ArrayList<String> companions = inflateString(flatCompanions);
          int airQuality = cursor.getInt(cursor.getColumnIndex("airQuality"));
          int belief = cursor.getInt(cursor.getColumnIndex("belief"));
          int intention = cursor.getInt(cursor.getColumnIndex("intention"));
@@ -414,8 +418,8 @@ public class DBAccess implements AMDBContract {
     * @param ids The IDs of the desired SensorData records in the database
     * @return List of SensorData
     */
-   private List<SensorData> getSensorData(List<Long> ids) {
-      List<SensorData> data = new ArrayList<>(ids.size());
+   private ArrayList<SensorData> getSensorData(ArrayList<Long> ids) {
+      ArrayList<SensorData> data = new ArrayList<>(ids.size());
       for(Long id: ids) {
          data.add(getSensorData(id));
       }
@@ -451,9 +455,9 @@ public class DBAccess implements AMDBContract {
     * @param str The semicolon-separated input String
     * @return The input, as a List
     */
-   private List<String> inflateString(String str) {
+   private ArrayList<String> inflateString(String str) {
       String[] strings = str.split(ARRAY_SEPARATOR);
-      List<String> list = new ArrayList<>(strings.length);
+      ArrayList<String> list = new ArrayList<>(strings.length);
       for(String string: strings) {
          list.add(string);
       }
@@ -465,9 +469,9 @@ public class DBAccess implements AMDBContract {
     * @param str The semicolon-separated input String
     * @return The input, as a List
     */
-   private List<Long> inflateLong(String str) {
+   private ArrayList<Long> inflateLong(String str) {
       String[] strings = str.split(ARRAY_SEPARATOR);
-      List<Long> list = new ArrayList<>(strings.length);
+      ArrayList<Long> list = new ArrayList<>(strings.length);
       for(String string: strings) {
          list.add(Long.valueOf(string));
       }

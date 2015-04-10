@@ -1,7 +1,6 @@
 package jimjams.airmonitor.sensordata;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Generates random sensor sensor data to test app. This class uses the singleton pattern and a
@@ -54,8 +53,8 @@ public class SensorDataGenerator {
     * is no data are not returned.
     * @return Sensor data
     */
-   public List<SensorData> getData() {
-      List<SensorData> data = new ArrayList<>();
+   public ArrayList<SensorData> getData() {
+      ArrayList<SensorData> data = new ArrayList<>();
       for(DataCategory dataCat: dataCats) {
          if(rand(0, 1) < RETURN_CHANCE) {
             data.add(new SensorData(dataCat.displayName, dataCat.shortName,

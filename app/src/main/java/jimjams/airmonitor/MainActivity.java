@@ -13,7 +13,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import jimjams.airmonitor.sensordata.SensorData;
 import jimjams.airmonitor.sensordata.SensorDataGenerator;
@@ -65,7 +65,7 @@ public class MainActivity extends ActionBarActivity {
     */
    private void refreshAQInset() {
       // Get updated data
-      List<SensorData> data = SensorDataGenerator.getInstance().getData();
+      ArrayList<SensorData> data = SensorDataGenerator.getInstance().getData();
 
       // Create and populate a table
       TableLayout aqi = (TableLayout)findViewById(R.id.mainScreen_airQualityInset);

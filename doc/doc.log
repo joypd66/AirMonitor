@@ -1,29 +1,29 @@
 Loading source files for package jimjams.airmonitor...
 [parsing started RegularFileObject[.\jimjams\airmonitor\BluetoothActivity.java]]
-[parsing completed 65ms]
+[parsing completed 71ms]
 [parsing started RegularFileObject[.\jimjams\airmonitor\EMAActivity.java]]
-[parsing completed 17ms]
+[parsing completed 25ms]
 [parsing started RegularFileObject[.\jimjams\airmonitor\HistoryActivity.java]]
-[parsing completed 19ms]
+[parsing completed 27ms]
 [parsing started RegularFileObject[.\jimjams\airmonitor\MainActivity.java]]
-[parsing completed 7ms]
+[parsing completed 10ms]
 Loading source files for package jimjams.airmonitor.database...
 [parsing started RegularFileObject[.\jimjams\airmonitor\database\AMDBContract.java]]
-[parsing completed 10ms]
+[parsing completed 11ms]
 [parsing started RegularFileObject[.\jimjams\airmonitor\database\DBAccess.java]]
-[parsing completed 20ms]
+[parsing completed 23ms]
 Loading source files for package jimjams.airmonitor.datastructure...
 [parsing started RegularFileObject[.\jimjams\airmonitor\datastructure\EcologicalMomentaryAssessment.java]]
-[parsing completed 7ms]
+[parsing completed 9ms]
 [parsing started RegularFileObject[.\jimjams\airmonitor\datastructure\Profile.java]]
 [parsing completed 4ms]
 [parsing started RegularFileObject[.\jimjams\airmonitor\datastructure\Snapshot.java]]
-[parsing completed 5ms]
+[parsing completed 7ms]
 Loading source files for package jimjams.airmonitor.sensordata...
 [parsing started RegularFileObject[.\jimjams\airmonitor\sensordata\SensorData.java]]
-[parsing completed 5ms]
+[parsing completed 3ms]
 [parsing started RegularFileObject[.\jimjams\airmonitor\sensordata\SensorDataGenerator.java]]
-[parsing completed 11ms]
+[parsing completed 8ms]
 Constructing Javadoc information...
 .\jimjams\airmonitor\BluetoothActivity.java:6: error: package android.bluetooth does not exist
 import android.bluetooth.BluetoothSocket;
@@ -352,20 +352,20 @@ import android.location.LocationManager;
           ^
   symbol:   class Location
   location: class Snapshot
-.\jimjams\airmonitor\EMAActivity.java:325: error: package View does not exist
+.\jimjams\airmonitor\EMAActivity.java:336: error: package View does not exist
    private class DeleteButtonListener implements View.OnClickListener {
                                                      ^
-.\jimjams\airmonitor\EMAActivity.java:330: error: cannot find symbol
+.\jimjams\airmonitor\EMAActivity.java:341: error: cannot find symbol
       public void onClick(View v) {
                           ^
   symbol:   class View
   location: class EMAActivity.DeleteButtonListener
-.\jimjams\airmonitor\EMAActivity.java:340: error: cannot find symbol
+.\jimjams\airmonitor\EMAActivity.java:352: error: cannot find symbol
    private class DeleteButton extends Button {
                                       ^
   symbol:   class Button
   location: class EMAActivity
-.\jimjams\airmonitor\EMAActivity.java:350: error: cannot find symbol
+.\jimjams\airmonitor\EMAActivity.java:362: error: cannot find symbol
       DeleteButton(Context context, String condition) {
                    ^
   symbol:   class Context
@@ -446,11 +446,10 @@ Generating C:\android\projects\AirMonitor\doc\jimjams\airmonitor\HistoryActivity
 .\jimjams\airmonitor\EMAActivity.java:38: error: package android.util does not exist
     * Allows database access
                    ^
-Generating C:\android\projects\AirMonitor\doc\jimjams\airmonitor\HistoryActivity.ExpansionListener.html...
 Generating C:\android\projects\AirMonitor\doc\jimjams\airmonitor\MainActivity.html...
-.\jimjams\airmonitor\EMAActivity.java:27: error: package android.util does not exist
-import jimjams.airmonitor.sensordata.SensorDataGenerator;
-        ^
+.\jimjams\airmonitor\EMAActivity.java:25: error: package android.util does not exist
+import jimjams.airmonitor.datastructure.Snapshot;
+                                              ^
 Generating C:\android\projects\AirMonitor\doc\jimjams\airmonitor\database\AMDBContract.html...
 Generating C:\android\projects\AirMonitor\doc\jimjams\airmonitor\database\AMDBContract.EMATable.html...
 Generating C:\android\projects\AirMonitor\doc\jimjams\airmonitor\database\AMDBContract.ProfileTable.html...
@@ -493,6 +492,6 @@ Generating C:\android\projects\AirMonitor\doc\allclasses-noframe.html...
 Generating C:\android\projects\AirMonitor\doc\index.html...
 Generating C:\android\projects\AirMonitor\doc\overview-summary.html...
 Generating C:\android\projects\AirMonitor\doc\help-doc.html...
-[done in 3263 ms]
+[done in 4379 ms]
 4 errors
 100 warnings
