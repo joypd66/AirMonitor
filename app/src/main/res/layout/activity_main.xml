@@ -24,6 +24,13 @@
                 android:padding="@dimen/mainScreen_airQualityInset_padding"
                 android:layout_centerHorizontal="true"/>
 
+    <!-- INSERT for displaying testing data -->
+    <TextView
+        android:id="@+id/feedbackText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mainScreen_airQualityInset" />
+
    <!-- Button to refresh AQ data -->
     <info.hoang8f.widget.FButton
         android:id="@+id/refresh_button"

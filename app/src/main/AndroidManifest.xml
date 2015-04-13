@@ -6,6 +6,10 @@
    <uses-permission android:name="android.permission.BLUETOOTH"/>
    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+   <!-- ADDED PERMISSIONS FOR AUDIO RECORD & WRITE PERMISSIONS
+        This is for getting the sound level -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
    <application android:allowBackup="true"
                 android:icon="@mipmap/ic_launcher"
