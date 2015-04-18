@@ -1,0 +1,497 @@
+Loading source files for package jimjams.airmonitor...
+[parsing started RegularFileObject[.\jimjams\airmonitor\BluetoothActivity.java]]
+[parsing completed 71ms]
+[parsing started RegularFileObject[.\jimjams\airmonitor\EMAActivity.java]]
+[parsing completed 25ms]
+[parsing started RegularFileObject[.\jimjams\airmonitor\HistoryActivity.java]]
+[parsing completed 27ms]
+[parsing started RegularFileObject[.\jimjams\airmonitor\MainActivity.java]]
+[parsing completed 10ms]
+Loading source files for package jimjams.airmonitor.database...
+[parsing started RegularFileObject[.\jimjams\airmonitor\database\AMDBContract.java]]
+[parsing completed 11ms]
+[parsing started RegularFileObject[.\jimjams\airmonitor\database\DBAccess.java]]
+[parsing completed 23ms]
+Loading source files for package jimjams.airmonitor.datastructure...
+[parsing started RegularFileObject[.\jimjams\airmonitor\datastructure\EcologicalMomentaryAssessment.java]]
+[parsing completed 9ms]
+[parsing started RegularFileObject[.\jimjams\airmonitor\datastructure\Profile.java]]
+[parsing completed 4ms]
+[parsing started RegularFileObject[.\jimjams\airmonitor\datastructure\Snapshot.java]]
+[parsing completed 7ms]
+Loading source files for package jimjams.airmonitor.sensordata...
+[parsing started RegularFileObject[.\jimjams\airmonitor\sensordata\SensorData.java]]
+[parsing completed 3ms]
+[parsing started RegularFileObject[.\jimjams\airmonitor\sensordata\SensorDataGenerator.java]]
+[parsing completed 8ms]
+Constructing Javadoc information...
+.\jimjams\airmonitor\BluetoothActivity.java:6: error: package android.bluetooth does not exist
+import android.bluetooth.BluetoothSocket;
+                        ^
+.\jimjams\airmonitor\BluetoothActivity.java:7: error: package android.os does not exist
+import android.os.Bundle;
+                 ^
+.\jimjams\airmonitor\BluetoothActivity.java:8: error: package android.app does not exist
+import android.app.Activity;
+                  ^
+.\jimjams\airmonitor\BluetoothActivity.java:9: error: package android.bluetooth does not exist
+import android.bluetooth.BluetoothAdapter;
+                        ^
+.\jimjams\airmonitor\BluetoothActivity.java:10: error: package android.bluetooth does not exist
+import android.bluetooth.BluetoothDevice;
+                        ^
+.\jimjams\airmonitor\BluetoothActivity.java:11: error: package android.content does not exist
+import android.content.BroadcastReceiver;
+                      ^
+.\jimjams\airmonitor\BluetoothActivity.java:12: error: package android.content does not exist
+import android.content.Context;
+                      ^
+.\jimjams\airmonitor\BluetoothActivity.java:14: error: package android.content does not exist
+import android.content.Intent;
+                      ^
+.\jimjams\airmonitor\BluetoothActivity.java:15: error: package android.content does not exist
+import android.content.IntentFilter;
+                      ^
+.\jimjams\airmonitor\BluetoothActivity.java:16: error: package android.support.v7.app does not exist
+import android.support.v7.app.ActionBarActivity;
+                             ^
+.\jimjams\airmonitor\BluetoothActivity.java:17: error: package android.view does not exist
+import android.view.View;
+                   ^
+.\jimjams\airmonitor\BluetoothActivity.java:18: error: package android.view.View does not exist
+import android.view.View.OnClickListener;
+                        ^
+.\jimjams\airmonitor\BluetoothActivity.java:19: error: package android.widget does not exist
+import android.widget.AdapterView;
+                     ^
+.\jimjams\airmonitor\BluetoothActivity.java:20: error: package android.widget does not exist
+import android.widget.ArrayAdapter;
+                     ^
+.\jimjams\airmonitor\BluetoothActivity.java:21: error: package android.widget does not exist
+import android.widget.Button;
+                     ^
+.\jimjams\airmonitor\BluetoothActivity.java:22: error: package android.widget does not exist
+import android.widget.ListView;
+                     ^
+.\jimjams\airmonitor\BluetoothActivity.java:23: error: package android.widget does not exist
+import android.widget.Toast;
+                     ^
+.\jimjams\airmonitor\BluetoothActivity.java:24: error: package android.widget.AdapterView does not exist
+import android.widget.AdapterView.OnItemClickListener;
+                                 ^
+.\jimjams\airmonitor\BluetoothActivity.java:30: error: cannot find symbol
+public class BluetoothActivity extends ActionBarActivity {
+                                       ^
+  symbol: class ActionBarActivity
+.\jimjams\airmonitor\BluetoothActivity.java:34: error: cannot find symbol
+    private Button turnOnButton = null;
+            ^
+  symbol:   class Button
+  location: class BluetoothActivity
+.\jimjams\airmonitor\BluetoothActivity.java:35: error: cannot find symbol
+    private Button turnOffButton = null;
+            ^
+  symbol:   class Button
+  location: class BluetoothActivity
+.\jimjams\airmonitor\BluetoothActivity.java:36: error: cannot find symbol
+    private Button listPairedButton = null;
+            ^
+  symbol:   class Button
+  location: class BluetoothActivity
+.\jimjams\airmonitor\BluetoothActivity.java:37: error: cannot find symbol
+    private Button searchButton = null;
+            ^
+  symbol:   class Button
+  location: class BluetoothActivity
+.\jimjams\airmonitor\BluetoothActivity.java:45: error: cannot find symbol
+    private BluetoothAdapter bluetoothAdapter = null;
+            ^
+  symbol:   class BluetoothAdapter
+  location: class BluetoothActivity
+.\jimjams\airmonitor\BluetoothActivity.java:46: error: cannot find symbol
+    private BluetoothDevice bluetoothDevice = null;
+            ^
+  symbol:   class BluetoothDevice
+  location: class BluetoothActivity
+.\jimjams\airmonitor\BluetoothActivity.java:47: error: cannot find symbol
+    private BluetoothSocket bluetoothSocket = null;
+            ^
+  symbol:   class BluetoothSocket
+  location: class BluetoothActivity
+.\jimjams\airmonitor\BluetoothActivity.java:49: error: cannot find symbol
+    private ListView listViewPaired = null;
+            ^
+  symbol:   class ListView
+  location: class BluetoothActivity
+.\jimjams\airmonitor\BluetoothActivity.java:50: error: cannot find symbol
+    private ListView listViewDetected = null;
+            ^
+  symbol:   class ListView
+  location: class BluetoothActivity
+.\jimjams\airmonitor\BluetoothActivity.java:53: error: cannot find symbol
+    ArrayList<BluetoothDevice> arrayListDetectedBluetoothDevices = null;
+              ^
+  symbol:   class BluetoothDevice
+  location: class BluetoothActivity
+.\jimjams\airmonitor\BluetoothActivity.java:54: error: cannot find symbol
+    ArrayList<BluetoothDevice> arrayListPairedBluetoothDevices = null;
+              ^
+  symbol:   class BluetoothDevice
+  location: class BluetoothActivity
+.\jimjams\airmonitor\BluetoothActivity.java:55: error: cannot find symbol
+    private Set<BluetoothDevice> pairedDevices = null;
+                ^
+  symbol:   class BluetoothDevice
+  location: class BluetoothActivity
+.\jimjams\airmonitor\BluetoothActivity.java:58: error: cannot find symbol
+    private ArrayAdapter<String> pairedAdapter = null;
+            ^
+  symbol:   class ArrayAdapter
+  location: class BluetoothActivity
+.\jimjams\airmonitor\BluetoothActivity.java:59: error: cannot find symbol
+    private ArrayAdapter<String> detectedAdapter = null;
+            ^
+  symbol:   class ArrayAdapter
+  location: class BluetoothActivity
+.\jimjams\airmonitor\BluetoothActivity.java:62: error: cannot find symbol
+    protected void onCreate(Bundle savedInstanceState) {
+                            ^
+  symbol:   class Bundle
+  location: class BluetoothActivity
+.\jimjams\airmonitor\BluetoothActivity.java:192: error: cannot find symbol
+    public void turnOn(View view) {
+                       ^
+  symbol:   class View
+  location: class BluetoothActivity
+.\jimjams\airmonitor\BluetoothActivity.java:208: error: cannot find symbol
+    public void showPaired(View view) {
+                           ^
+  symbol:   class View
+  location: class BluetoothActivity
+.\jimjams\airmonitor\BluetoothActivity.java:231: error: cannot find symbol
+    final BroadcastReceiver bluetoothReceiver = new BroadcastReceiver() {
+          ^
+  symbol:   class BroadcastReceiver
+  location: class BluetoothActivity
+.\jimjams\airmonitor\BluetoothActivity.java:268: error: cannot find symbol
+    public void search(View view) {
+                       ^
+  symbol:   class View
+  location: class BluetoothActivity
+.\jimjams\airmonitor\BluetoothActivity.java:299: error: cannot find symbol
+    public void turnOff(View view) {
+                        ^
+  symbol:   class View
+  location: class BluetoothActivity
+.\jimjams\airmonitor\BluetoothActivity.java:327: error: cannot find symbol
+    public boolean createBond(BluetoothDevice bluetoothDevice) throws Exception {
+                              ^
+  symbol:   class BluetoothDevice
+  location: class BluetoothActivity
+.\jimjams\airmonitor\BluetoothActivity.java:335: error: cannot find symbol
+    public void connect(BluetoothDevice bluetoothDevice){
+                        ^
+  symbol:   class BluetoothDevice
+  location: class BluetoothActivity
+.\jimjams\airmonitor\BluetoothActivity.java:365: error: cannot find symbol
+    public void disconnect(BluetoothSocket socket){
+                           ^
+  symbol:   class BluetoothSocket
+  location: class BluetoothActivity
+.\jimjams\airmonitor\BluetoothActivity.java:378: error: cannot find symbol
+    public static BluetoothSocket createSocket(BluetoothDevice device){
+                                               ^
+  symbol:   class BluetoothDevice
+  location: class BluetoothActivity
+.\jimjams\airmonitor\BluetoothActivity.java:378: error: cannot find symbol
+    public static BluetoothSocket createSocket(BluetoothDevice device){
+                  ^
+  symbol:   class BluetoothSocket
+  location: class BluetoothActivity
+.\jimjams\airmonitor\EMAActivity.java:3: error: package android.content does not exist
+import android.content.Context;
+                      ^
+.\jimjams\airmonitor\EMAActivity.java:4: error: package android.content does not exist
+import android.content.Intent;
+                      ^
+.\jimjams\airmonitor\EMAActivity.java:5: error: package android.os does not exist
+import android.os.Bundle;
+                 ^
+.\jimjams\airmonitor\EMAActivity.java:6: error: package android.support.v7.app does not exist
+import android.support.v7.app.ActionBarActivity;
+                             ^
+.\jimjams\airmonitor\EMAActivity.java:7: error: package android.view does not exist
+import android.view.Menu;
+                   ^
+.\jimjams\airmonitor\EMAActivity.java:8: error: package android.view does not exist
+import android.view.MenuItem;
+                   ^
+.\jimjams\airmonitor\EMAActivity.java:9: error: package android.view does not exist
+import android.view.View;
+                   ^
+.\jimjams\airmonitor\EMAActivity.java:10: error: package android.widget does not exist
+import android.widget.Button;
+                     ^
+.\jimjams\airmonitor\EMAActivity.java:11: error: package android.widget does not exist
+import android.widget.EditText;
+                     ^
+.\jimjams\airmonitor\EMAActivity.java:12: error: package android.widget does not exist
+import android.widget.RadioGroup;
+                     ^
+.\jimjams\airmonitor\EMAActivity.java:13: error: package android.widget does not exist
+import android.widget.SeekBar;
+                     ^
+.\jimjams\airmonitor\EMAActivity.java:14: error: package android.widget does not exist
+import android.widget.TableLayout;
+                     ^
+.\jimjams\airmonitor\EMAActivity.java:15: error: package android.widget does not exist
+import android.widget.TableRow;
+                     ^
+.\jimjams\airmonitor\EMAActivity.java:16: error: package android.widget does not exist
+import android.widget.TextView;
+                     ^
+.\jimjams\airmonitor\EMAActivity.java:30: error: cannot find symbol
+public class EMAActivity extends ActionBarActivity {
+                                 ^
+  symbol: class ActionBarActivity
+.\jimjams\airmonitor\database\DBAccess.java:3: error: package android.content does not exist
+import android.content.ContentValues;
+                      ^
+.\jimjams\airmonitor\database\DBAccess.java:4: error: package android.database does not exist
+import android.database.Cursor;
+                       ^
+.\jimjams\airmonitor\database\DBAccess.java:5: error: package android.database.sqlite does not exist
+import android.database.sqlite.SQLiteDatabase;
+                              ^
+.\jimjams\airmonitor\database\DBAccess.java:6: error: package android.database.sqlite does not exist
+import android.database.sqlite.SQLiteFullException;
+                              ^
+.\jimjams\airmonitor\database\DBAccess.java:7: error: package android.location does not exist
+import android.location.Location;
+                       ^
+.\jimjams\airmonitor\database\AMDBContract.java:3: error: package android.provider does not exist
+import android.provider.BaseColumns;
+                       ^
+.\jimjams\airmonitor\datastructure\Profile.java:3: error: package android.database.sqlite does not exist
+import android.database.sqlite.SQLiteFullException;
+                              ^
+.\jimjams\airmonitor\datastructure\Profile.java:4: error: package android.util does not exist
+import android.util.Log;
+                   ^
+.\jimjams\airmonitor\EMAActivity.java:48: error: cannot find symbol
+   protected void onCreate(Bundle savedInstanceState) {
+                           ^
+  symbol:   class Bundle
+  location: class EMAActivity
+.\jimjams\airmonitor\EMAActivity.java:54: error: cannot find symbol
+   public boolean onCreateOptionsMenu(Menu menu) {
+                                      ^
+  symbol:   class Menu
+  location: class EMAActivity
+.\jimjams\airmonitor\EMAActivity.java:61: error: cannot find symbol
+   public boolean onOptionsItemSelected(MenuItem item) {
+                                        ^
+  symbol:   class MenuItem
+  location: class EMAActivity
+.\jimjams\airmonitor\datastructure\Snapshot.java:3: error: package android.content does not exist
+import android.content.Context;
+                      ^
+.\jimjams\airmonitor\datastructure\Snapshot.java:4: error: package android.location does not exist
+import android.location.Location;
+                       ^
+.\jimjams\airmonitor\datastructure\Snapshot.java:5: error: package android.location does not exist
+import android.location.LocationManager;
+                       ^
+.\jimjams\airmonitor\EMAActivity.java:187: error: cannot find symbol
+   public void on_EMA_Screen_save_button_click(View saveBtn) {
+                                               ^
+  symbol:   class View
+  location: class EMAActivity
+.\jimjams\airmonitor\EMAActivity.java:269: error: cannot find symbol
+   public void on_EMA_Screen_cancel_button_click(View cancelBtn) {
+                                                 ^
+  symbol:   class View
+  location: class EMAActivity
+.\jimjams\airmonitor\EMAActivity.java:278: error: cannot find symbol
+   public void on_EMA_Screen_add_button_click(View addBtn) {
+                                              ^
+  symbol:   class View
+  location: class EMAActivity
+.\jimjams\airmonitor\database\DBAccess.java:33: error: cannot find symbol
+   private SQLiteDatabase database;
+           ^
+  symbol:   class SQLiteDatabase
+  location: class DBAccess
+.\jimjams\airmonitor\database\DBAccess.java:229: error: cannot find symbol
+   public long getProfileId() throws SQLiteFullException {
+                                     ^
+  symbol:   class SQLiteFullException
+  location: class DBAccess
+.\jimjams\airmonitor\database\DBAccess.java:255: error: cannot find symbol
+   public List<String> getProfileConditions() throws SQLiteFullException {
+                                                     ^
+  symbol:   class SQLiteFullException
+  location: class DBAccess
+.\jimjams\airmonitor\datastructure\Snapshot.java:33: error: cannot find symbol
+   private Location location;
+           ^
+  symbol:   class Location
+  location: class Snapshot
+.\jimjams\airmonitor\datastructure\Snapshot.java:59: error: cannot find symbol
+         EcologicalMomentaryAssessment ema, Context context) {
+                                            ^
+  symbol:   class Context
+  location: class Snapshot
+.\jimjams\airmonitor\datastructure\Snapshot.java:87: error: cannot find symbol
+    public Snapshot(long userId, Date timestamp, Location location, List<SensorData> data,
+                                                 ^
+  symbol:   class Location
+  location: class Snapshot
+.\jimjams\airmonitor\datastructure\Snapshot.java:135: error: cannot find symbol
+   public Location getLocation() {
+          ^
+  symbol:   class Location
+  location: class Snapshot
+.\jimjams\airmonitor\EMAActivity.java:336: error: package View does not exist
+   private class DeleteButtonListener implements View.OnClickListener {
+                                                     ^
+.\jimjams\airmonitor\EMAActivity.java:341: error: cannot find symbol
+      public void onClick(View v) {
+                          ^
+  symbol:   class View
+  location: class EMAActivity.DeleteButtonListener
+.\jimjams\airmonitor\EMAActivity.java:352: error: cannot find symbol
+   private class DeleteButton extends Button {
+                                      ^
+  symbol:   class Button
+  location: class EMAActivity
+.\jimjams\airmonitor\EMAActivity.java:362: error: cannot find symbol
+      DeleteButton(Context context, String condition) {
+                   ^
+  symbol:   class Context
+  location: class EMAActivity.DeleteButton
+.\jimjams\airmonitor\HistoryActivity.java:3: error: package android.location does not exist
+import android.location.Location;
+                       ^
+.\jimjams\airmonitor\HistoryActivity.java:4: error: package android.os does not exist
+import android.os.Bundle;
+                 ^
+.\jimjams\airmonitor\HistoryActivity.java:5: error: package android.support.v7.app does not exist
+import android.support.v7.app.ActionBarActivity;
+                             ^
+.\jimjams\airmonitor\HistoryActivity.java:6: error: package android.util does not exist
+import android.util.Log;
+                   ^
+.\jimjams\airmonitor\HistoryActivity.java:7: error: package android.view does not exist
+import android.view.Gravity;
+                   ^
+.\jimjams\airmonitor\HistoryActivity.java:8: error: package android.view does not exist
+import android.view.Menu;
+                   ^
+.\jimjams\airmonitor\HistoryActivity.java:9: error: package android.view does not exist
+import android.view.MenuItem;
+                   ^
+.\jimjams\airmonitor\HistoryActivity.java:10: error: package android.view does not exist
+import android.view.View;
+                   ^
+.\jimjams\airmonitor\HistoryActivity.java:11: error: package android.view does not exist
+import android.view.ViewGroup;
+                   ^
+.\jimjams\airmonitor\HistoryActivity.java:12: error: package android.widget does not exist
+import android.widget.LinearLayout;
+                     ^
+.\jimjams\airmonitor\HistoryActivity.java:13: error: package android.widget does not exist
+import android.widget.TableLayout;
+                     ^
+.\jimjams\airmonitor\HistoryActivity.java:14: error: package android.widget does not exist
+import android.widget.TableRow;
+                     ^
+.\jimjams\airmonitor\HistoryActivity.java:15: error: package android.widget does not exist
+import android.widget.TextView;
+                     ^
+[search path for source files: .,C:\jing\jing-20081028\bin]
+[search path for class files: C:\Program Files\Java\jdk1.8.0_05\jre\lib\resources.jar,C:\Program Files\Java\jdk1.8.0_05\jre\lib\rt.jar,C:\Program Files\Java\jdk1.8.0_05\jre\lib\sunrsasign.jar,C:\Program Files\Java\jdk1.8.0_05\jre\lib\jsse.jar,C:\Program Files\Java\jdk1.8.0_05\jre\lib\jce.jar,C:\Program Files\Java\jdk1.8.0_05\jre\lib\charsets.jar,C:\Program Files\Java\jdk1.8.0_05\jre\lib\jfr.jar,C:\Program Files\Java\jdk1.8.0_05\jre\classes,C:\Program Files\Java\jdk1.8.0_05\jre\lib\ext\access-bridge-64.jar,C:\Program Files\Java\jdk1.8.0_05\jre\lib\ext\cldrdata.jar,C:\Program Files\Java\jdk1.8.0_05\jre\lib\ext\dnsns.jar,C:\Program Files\Java\jdk1.8.0_05\jre\lib\ext\jaccess.jar,C:\Program Files\Java\jdk1.8.0_05\jre\lib\ext\jfxrt.jar,C:\Program Files\Java\jdk1.8.0_05\jre\lib\ext\localedata.jar,C:\Program Files\Java\jdk1.8.0_05\jre\lib\ext\nashorn.jar,C:\Program Files\Java\jdk1.8.0_05\jre\lib\ext\sunec.jar,C:\Program Files\Java\jdk1.8.0_05\jre\lib\ext\sunjce_provider.jar,C:\Program Files\Java\jdk1.8.0_05\jre\lib\ext\sunmscapi.jar,C:\Program Files\Java\jdk1.8.0_05\jre\lib\ext\sunpkcs11.jar,C:\Program Files\Java\jdk1.8.0_05\jre\lib\ext\zipfs.jar,.,C:\jing\jing-20081028\bin]
+[loading ZipFileIndexFileObject[C:\Program Files\Java\jdk1.8.0_05\jre\lib\rt.jar(java/io/IOException.class)]]
+[loading ZipFileIndexFileObject[C:\Program Files\Java\jdk1.8.0_05\jre\lib\rt.jar(java/util/ArrayList.class)]]
+[loading ZipFileIndexFileObject[C:\Program Files\Java\jdk1.8.0_05\jre\lib\rt.jar(java/util/Set.class)]]
+[loading ZipFileIndexFileObject[C:\Program Files\Java\jdk1.8.0_05\jre\lib\rt.jar(java/lang/reflect/Method.class)]]
+[loading ZipFileIndexFileObject[C:\Program Files\Java\jdk1.8.0_05\jre\lib\rt.jar(java/lang/String.class)]]
+[loading ZipFileIndexFileObject[C:\Program Files\Java\jdk1.8.0_05\jre\lib\rt.jar(java/lang/Exception.class)]]
+[loading ZipFileIndexFileObject[C:\Program Files\Java\jdk1.8.0_05\jre\lib\rt.jar(java/util/Arrays.class)]]
+[loading ZipFileIndexFileObject[C:\Program Files\Java\jdk1.8.0_05\jre\lib\rt.jar(java/util/Comparator.class)]]
+[loading ZipFileIndexFileObject[C:\Program Files\Java\jdk1.8.0_05\jre\lib\rt.jar(java/util/List.class)]]
+[loading ZipFileIndexFileObject[C:\Program Files\Java\jdk1.8.0_05\jre\lib\rt.jar(java/io/File.class)]]
+[loading ZipFileIndexFileObject[C:\Program Files\Java\jdk1.8.0_05\jre\lib\rt.jar(java/util/Date.class)]]
+[loading ZipFileIndexFileObject[C:\Program Files\Java\jdk1.8.0_05\jre\lib\rt.jar(java/lang/Object.class)]]
+[loading ZipFileIndexFileObject[C:\Program Files\Java\jdk1.8.0_05\jre\lib\rt.jar(java/text/DecimalFormat.class)]]
+[loading ZipFileIndexFileObject[C:\Program Files\Java\jdk1.8.0_05\jre\lib\rt.jar(java/lang/Long.class)]]
+[loading ZipFileIndexFileObject[C:\Program Files\Java\jdk1.8.0_05\jre\lib\rt.jar(java/lang/Override.class)]]
+[loading ZipFileIndexFileObject[C:\Program Files\Java\jdk1.8.0_05\jre\lib\rt.jar(java/lang/annotation/Annotation.class)]]
+[loading ZipFileIndexFileObject[C:\Program Files\Java\jdk1.8.0_05\jre\lib\rt.jar(java/lang/annotation/Target.class)]]
+[loading ZipFileIndexFileObject[C:\Program Files\Java\jdk1.8.0_05\jre\lib\rt.jar(java/lang/annotation/ElementType.class)]]
+[loading ZipFileIndexFileObject[C:\Program Files\Java\jdk1.8.0_05\jre\lib\rt.jar(java/lang/annotation/Retention.class)]]
+[loading ZipFileIndexFileObject[C:\Program Files\Java\jdk1.8.0_05\jre\lib\rt.jar(java/lang/annotation/RetentionPolicy.class)]]
+[loading ZipFileIndexFileObject[C:\Program Files\Java\jdk1.8.0_05\jre\lib\rt.jar(java/lang/Error.class)]]
+[loading ZipFileIndexFileObject[C:\Program Files\Java\jdk1.8.0_05\jre\lib\rt.jar(java/lang/RuntimeException.class)]]
+[loading ZipFileIndexFileObject[C:\Program Files\Java\jdk1.8.0_05\jre\lib\rt.jar(java/lang/Throwable.class)]]
+[loading ZipFileIndexFileObject[C:\Program Files\Java\jdk1.8.0_05\jre\lib\rt.jar(java/lang/Void.class)]]
+Standard Doclet version 1.8.0_05
+Building tree for all the packages and classes...
+Generating C:\android\projects\AirMonitor\doc\jimjams\airmonitor\BluetoothActivity.html...
+Generating C:\android\projects\AirMonitor\doc\jimjams\airmonitor\EMAActivity.html...
+Generating C:\android\projects\AirMonitor\doc\jimjams\airmonitor\EMAActivity.DeleteButton.html...
+Generating C:\android\projects\AirMonitor\doc\jimjams\airmonitor\EMAActivity.DeleteButtonListener.html...
+[loading ZipFileIndexFileObject[C:\Program Files\Java\jdk1.8.0_05\jre\lib\rt.jar(java/io/Serializable.class)]]
+Generating C:\android\projects\AirMonitor\doc\jimjams\airmonitor\HistoryActivity.html...
+.\jimjams\airmonitor\EMAActivity.java:38: error: package android.util does not exist
+    * Allows database access
+                   ^
+Generating C:\android\projects\AirMonitor\doc\jimjams\airmonitor\MainActivity.html...
+.\jimjams\airmonitor\EMAActivity.java:25: error: package android.util does not exist
+import jimjams.airmonitor.datastructure.Snapshot;
+                                              ^
+Generating C:\android\projects\AirMonitor\doc\jimjams\airmonitor\database\AMDBContract.html...
+Generating C:\android\projects\AirMonitor\doc\jimjams\airmonitor\database\AMDBContract.EMATable.html...
+Generating C:\android\projects\AirMonitor\doc\jimjams\airmonitor\database\AMDBContract.ProfileTable.html...
+Generating C:\android\projects\AirMonitor\doc\jimjams\airmonitor\database\AMDBContract.SensorDataTable.html...
+Generating C:\android\projects\AirMonitor\doc\jimjams\airmonitor\database\AMDBContract.SnapshotTable.html...
+Generating C:\android\projects\AirMonitor\doc\jimjams\airmonitor\database\DBAccess.html...
+.\jimjams\airmonitor\database\DBAccess.java:227: error: reference not found
+    * @throws SQLiteFullException if the database contains more than one Profile
+      ^
+.\jimjams\airmonitor\database\DBAccess.java:253: error: reference not found
+    * @throws SQLiteFullException
+      ^
+Generating C:\android\projects\AirMonitor\doc\jimjams\airmonitor\datastructure\EcologicalMomentaryAssessment.html...
+Generating C:\android\projects\AirMonitor\doc\jimjams\airmonitor\datastructure\Profile.html...
+Generating C:\android\projects\AirMonitor\doc\jimjams\airmonitor\datastructure\Snapshot.html...
+Generating C:\android\projects\AirMonitor\doc\jimjams\airmonitor\sensordata\SensorData.html...
+Generating C:\android\projects\AirMonitor\doc\jimjams\airmonitor\sensordata\SensorDataGenerator.html...
+Generating C:\android\projects\AirMonitor\doc\jimjams\airmonitor\sensordata\SensorDataGenerator.DataCategory.html...
+Generating C:\android\projects\AirMonitor\doc\overview-frame.html...
+Generating C:\android\projects\AirMonitor\doc\jimjams\airmonitor\package-frame.html...
+Generating C:\android\projects\AirMonitor\doc\jimjams\airmonitor\package-summary.html...
+Generating C:\android\projects\AirMonitor\doc\jimjams\airmonitor\package-tree.html...
+Generating C:\android\projects\AirMonitor\doc\jimjams\airmonitor\database\package-frame.html...
+Generating C:\android\projects\AirMonitor\doc\jimjams\airmonitor\database\package-summary.html...
+Generating C:\android\projects\AirMonitor\doc\jimjams\airmonitor\database\package-tree.html...
+Generating C:\android\projects\AirMonitor\doc\jimjams\airmonitor\datastructure\package-frame.html...
+Generating C:\android\projects\AirMonitor\doc\jimjams\airmonitor\datastructure\package-summary.html...
+Generating C:\android\projects\AirMonitor\doc\jimjams\airmonitor\datastructure\package-tree.html...
+Generating C:\android\projects\AirMonitor\doc\jimjams\airmonitor\sensordata\package-frame.html...
+Generating C:\android\projects\AirMonitor\doc\jimjams\airmonitor\sensordata\package-summary.html...
+Generating C:\android\projects\AirMonitor\doc\jimjams\airmonitor\sensordata\package-tree.html...
+Generating C:\android\projects\AirMonitor\doc\constant-values.html...
+Building index for all the packages and classes...
+Generating C:\android\projects\AirMonitor\doc\overview-tree.html...
+Generating C:\android\projects\AirMonitor\doc\index-all.html...
+Generating C:\android\projects\AirMonitor\doc\deprecated-list.html...
+Building index for all classes...
+Generating C:\android\projects\AirMonitor\doc\allclasses-frame.html...
+Generating C:\android\projects\AirMonitor\doc\allclasses-noframe.html...
+Generating C:\android\projects\AirMonitor\doc\index.html...
+Generating C:\android\projects\AirMonitor\doc\overview-summary.html...
+Generating C:\android\projects\AirMonitor\doc\help-doc.html...
+[done in 4379 ms]
+4 errors
+100 warnings
