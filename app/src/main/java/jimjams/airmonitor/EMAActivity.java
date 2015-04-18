@@ -125,15 +125,15 @@ public class EMAActivity extends ActionBarActivity {
 
          // Update air quality seekbar
          SeekBar aqBar = (SeekBar)findViewById(R.id.ema_screen_aq_awareness_input);
-         aqBar.setProgress(scaleUp(ema.getAirQuality()));
+         aqBar.setProgress(ema.getAirQuality() - 1);
 
          // Update the belief seekbar
          SeekBar beliefBar = (SeekBar)findViewById(R.id.ema_screen_aq_belief_input);
-         beliefBar.setProgress(scaleUp(ema.getBelief()));
+         beliefBar.setProgress(ema.getBelief() - 1);
 
          // Update the intention seekbar
          SeekBar intentionBar = (SeekBar)findViewById(R.id.ema_screen_aq_intent_input);
-         intentionBar.setProgress(scaleUp(ema.getIntention()));
+         intentionBar.setProgress(ema.getIntention() - 1);
 
          // Update behavior radiogroup
          RadioGroup behaviorGroup = (RadioGroup)findViewById(R.id.ema_screen_aq_behave_group);
@@ -238,15 +238,15 @@ public class EMAActivity extends ActionBarActivity {
 
       // Get air quality
       SeekBar aqBar = (SeekBar)findViewById(R.id.ema_screen_aq_awareness_input);
-      int aq = scaleDown(aqBar.getProgress());
+      int aq = aqBar.getProgress() + 1;
 
       // Get belief
       SeekBar beliefBar = (SeekBar)findViewById(R.id.ema_screen_aq_belief_input);
-      int belief = scaleDown(beliefBar.getProgress());
+      int belief = beliefBar.getProgress() + 1;
 
       // Get intention info
       SeekBar intentBar = (SeekBar)findViewById(R.id.ema_screen_aq_intent_input);
-      int intention = scaleDown(intentBar.getProgress());
+      int intention = intentBar.getProgress() + 1;
 
       // Get behavior info
       RadioGroup behaveRg = (RadioGroup)findViewById(R.id.ema_screen_aq_behave_group);
@@ -360,26 +360,4 @@ public class EMAActivity extends ActionBarActivity {
          return condition;
       }
    }
-
-   /**
-    * Scales a SeekBar's value (0 - 100) to a value from 1 - 10.
-    * @param seekBarValue The value obtained from the seekBar's getProgress() method
-    * @return The Seekbar's value, scaled to a range of 1 - 10
-    */
-   private static int scaleDown(int seekBarValue) {
-      return ((int)(seekBarValue *.99 + 10)) / 10;
-   }
-
-   /**
-    * Scales a value inthe range 1 - 10 to a value from 0 - 100, to be used to update a SeekBar.
-    * @param scaledValue The scaled-down value
-    * @return Scaled-up value
-    */
-   private static int scaleUp(int scaledValue) {
-      scaledValue *= 10;
-      scaledValue -= 1;
-      scaledValue /= .99;
-      return (int)scaledValue;
-   }
-
 }
