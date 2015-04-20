@@ -242,4 +242,35 @@ public interface AMDBContract {
             { "displayValue", "TEXT" }
         };
     }
+
+    /**
+     * <p>Database used to store the Bluetooth device name.</p>
+     * <p>Columns in the table:</p>
+     * <dl>
+     *     <dt>id</dt>
+     *     <dd>Unique id for the record</dd>
+     *     <dt>name</dt>
+     *     <dd>Name of the device</dd>
+     * </dl>
+     */
+    public static final class BluetoothDeviceName implements BaseColumns {
+
+        /**
+         * Name of the table
+         */
+        public static final String TABLE_NAME = "bluetoothDevice";
+
+        /**
+         * Row ID
+         */
+        public static final long BLUETOOTH_ID = 1L;
+
+        /**
+         * Columns in the table
+         */
+        public static final String[][] COLUMNS = {
+            { "id", "INTEGER PRIMARY KEY" },
+            { "name", "TEXT" },
+        };
+    }
 }

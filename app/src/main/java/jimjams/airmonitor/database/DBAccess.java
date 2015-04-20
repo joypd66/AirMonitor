@@ -72,6 +72,10 @@ public class DBAccess implements AMDBContract {
         database.execSQL(DROP + CurrentDataTable.TABLE_NAME);
         database.execSQL(getTableCreateString(CurrentDataTable.TABLE_NAME,
                 CurrentDataTable.COLUMNS));
+
+        // Bluetooth device name table
+        database.execSQL(getTableCreateString(BluetoothDeviceName.TABLE_NAME,
+                BluetoothDeviceName.COLUMNS));
     }
 
     /**
@@ -472,7 +476,12 @@ public class DBAccess implements AMDBContract {
         String[] strings = str.split(ARRAY_SEPARATOR);
         ArrayList<Long> list = new ArrayList<>(strings.length);
         for(String string: strings) {
-            list.add(Long.valueOf(string));
+            try {
+                list.add(Long.valueOf(string));
+            }
+            catch(NumberFormatException|NullPointerException nfNpe) {
+                // Do nothing
+            }
         }
         return list;
     }
@@ -513,5 +522,33 @@ public class DBAccess implements AMDBContract {
         }
         cursor.close();
         return data;
+    }
+
+    /**
+     * Sets the name of the current Bluetooth device.
+     * @param name The name of the current Bluetooth device
+     */
+    public void setBluetoothDeviceName(String name) {
+        ContentValues cv = new ContentValues(BluetoothDeviceName.COLUMNS.length);
+        cv.put("id", BluetoothDeviceName.BLUETOOTH_ID);
+        cv.put("name", name);
+        database.insertWithOnConflict(BluetoothDeviceName.TABLE_NAME, null, cv,
+            SQLiteDatabase.CONFLICT_REPLACE);
+    }
+
+    /**
+     * Gets the name of the current Bluetooth device. If there is no device name in the table, null
+     * is returned.
+     * @return name The name of the current Bluetooth device, or null
+     */
+    public String getBluetoothDeviceName() {
+        String name = null;
+        Cursor cursor = database.rawQuery("SELECT * FROM " + BluetoothDeviceName.TABLE_NAME +
+                " WHERE id = " + BluetoothDeviceName.BLUETOOTH_ID, null);
+        if(cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            name = cursor.getString(cursor.getColumnIndex("name"));
+        }
+        return name;
     }
 }

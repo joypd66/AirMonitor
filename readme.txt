@@ -13,3 +13,6 @@ Anyway, I got rid of the Runable used to construct the workerThread and
 added a sleep(1500), which both gives the app time to update the screen
 and keeps the data from being refreshed more often than is useful. So
 far this change is only in the beginListenForRandomData() method.
+
+Also, database updated to save/retrieve bluetooth device name with
+setBluetoothDeviceName(String) and getBluetoothDeviceName().
