@@ -14,6 +14,7 @@ import java.util.Set;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -23,6 +24,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import java.lang.reflect.Method;
+
+import jimjams.airmonitor.database.DBAccess;
 
 /**
  * Created by pjoy on 3/25/15.
@@ -46,6 +49,11 @@ public class BluetoothActivity extends ActionBarActivity {
     private BluetoothDevice bluetoothDevice = null;
     private BluetoothSocket bluetoothSocket = null;
 
+    // DATA object
+    private DBAccess access = DBAccess.getDBAccess();
+
+
+
     private ListView listViewPaired = null;
     private ListView listViewDetected = null;
 
@@ -58,10 +66,18 @@ public class BluetoothActivity extends ActionBarActivity {
     private ArrayAdapter<String> pairedAdapter = null;
     private ArrayAdapter<String> detectedAdapter = null;
 
+    /// FOR testing
+    private String className = getClass().getSimpleName();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        //Log.e(className, bluetoothDevice.getName());
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth);
+
+
 
         //declare a bluetoothAdapter
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -139,6 +155,19 @@ public class BluetoothActivity extends ActionBarActivity {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     //Get the bluetooth device that was clicked
                     bluetoothDevice = arrayListPairedBluetoothDevices.get(position);
+
+                    // SAVE device name
+                    access.setBluetoothDeviceName(bluetoothDevice.getName());
+                    //Log.d("bluetoothName", bluetoothDevice.getName());
+
+                    Toast.makeText(getApplicationContext(), bluetoothDevice.getName() + " paired.", Toast.LENGTH_SHORT).show();
+
+
+
+
+                    /*
+                    may not need to open the connectino at this time
+
                     //connect the socket if it is null
                     if (bluetoothSocket == null){
                         connect(bluetoothDevice);
@@ -148,6 +177,8 @@ public class BluetoothActivity extends ActionBarActivity {
                     else{
                         disconnect(bluetoothSocket);
                     }//end else statement
+                    */
+
                 }//end onItemClick method
             });
 
@@ -391,9 +422,8 @@ public class BluetoothActivity extends ActionBarActivity {
     }//end createSocket class
 
     @Override
-    protected void onDestroy() {
-        //TODO Auto-generated method stub
-        super.onDestroy();
+    protected void onStop(){
+        super.onStop();
         try{
             //Unregister receiver
             unregisterReceiver(bluetoothReceiver);
@@ -402,6 +432,13 @@ public class BluetoothActivity extends ActionBarActivity {
 
             e.printStackTrace();
         }//end catch method
+    }
+
+    @Override
+    protected void onDestroy() {
+        //TODO Auto-generated method stub
+        super.onDestroy();
+
 
     }//end onDestroy method
 }
