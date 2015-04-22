@@ -90,6 +90,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         /**
          * ASSIGN feedbackText TextView to object JPM
          */
@@ -98,26 +99,56 @@ public class MainActivity extends ActionBarActivity {
         // SSM Added
         generator = SensorDataGenerator.getInstance();
 
+
+
+        //beginListenForRandomData();
+        // COMMENT out refeshAQInsert as this is occurring in the bluetooth thread now JPM
+        //refreshAQInset();
+    }
+
+    // ONSTART to start bluetooth every time main activity is returned too JPM
+    @Override
+    protected void onStart(){
         /**
          * TRY START bluetooth thread JPM
          */
+        if(access.getBluetoothDeviceName() == null){
+            feedbackText.setText("No Bluetooth device in memory.");
+        }else {
+            try {
+                findBT();
+                openBT();
+            }
+            // CATCH and print IOException JPM
+            catch (IOException | NullPointerException ex) {
+                // TextView myLabel = (TextView)findViewById(R.id.feedbackText);
 
-/*
-        try
-        {
-            findBT();
-            openBT();
+                feedbackText.setText("Error: " + ex);
+                // beginListenForRandomData();
+            }
         }
-        // CATCH and print IOException JPM
-        catch(IOException|NullPointerException ex) {
-            // TextView myLabel = (TextView)findViewById(R.id.feedbackText);
-            // feedbackText.setText("Error: " + ex);
-            beginListenForRandomData();
+
+        super.onStart();
+    }
+
+    @Override
+    protected void onResume(){
+        if(access.getBluetoothDeviceName() == null){
+            feedbackText.setText("No Bluetooth device in memory.");
+        }else {
+            try {
+                findBT();
+                openBT();
+            }
+            // CATCH and print IOException JPM
+            catch (IOException | NullPointerException ex) {
+                // TextView myLabel = (TextView)findViewById(R.id.feedbackText);
+
+                feedbackText.setText("Error: " + ex);
+                // beginListenForRandomData();
+            }
         }
-*/
-        beginListenForRandomData();
-        // COMMENT out refeshAQInsert as this is occurring in the bluetooth thread now JPM
-        //refreshAQInset();
+        super.onResume();
     }
 
     @Override
@@ -264,6 +295,11 @@ public class MainActivity extends ActionBarActivity {
      * @param blueBtn The history button on the main screen
      */
     public void on_MainScreen_Bluetooth_button_Click(View blueBtn) {
+        try {
+            closeBT();
+        }catch(IOException|NullPointerException e){
+            //
+        }
         Intent intent = new Intent(this, BluetoothActivity.class);
         startActivity(intent);
     }
@@ -305,7 +341,8 @@ public class MainActivity extends ActionBarActivity {
             for(BluetoothDevice device : pairedDevices)
             {
                 // IF device equals name CHOSEN IN BLUETOOTH SCREEN
-                if(device.getName().equals("RNBT-A5CA"))
+
+                if(device.getName().equals(access.getBluetoothDeviceName()))
                 {
                     // SET this device as our AirQuality device
                     mmDevice = device;
@@ -458,5 +495,14 @@ public class MainActivity extends ActionBarActivity {
             }
         };
         workerThread.start();
+    }
+
+    void closeBT() throws IOException
+    {
+        stopWorker = true;
+        mmOutputStream.close();
+        mmInputStream.close();
+        mmSocket.close();
+        //myLabel.setText("Bluetooth Closed");
     }
 }
