@@ -505,4 +505,12 @@ public class MainActivity extends ActionBarActivity {
         mmSocket.close();
         //myLabel.setText("Bluetooth Closed");
     }
+
+    /**
+     * Temp fix because the refresh button is crashing the app when trying to invoke this method
+     * @param v
+     */
+    public void on_MainScreen_refresh_button_Click(View v) {
+        // Do nothin
+    }
 }

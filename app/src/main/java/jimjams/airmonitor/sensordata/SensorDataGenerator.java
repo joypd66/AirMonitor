@@ -9,7 +9,12 @@ import java.util.ArrayList;
  */
 public class SensorDataGenerator {
 
-   /**
+    /**
+     * Used to identify source class for log
+     */
+    private String className = getClass().getSimpleName();
+
+    /**
     * The current instance of <code>SensorDataGenerator</code>
     */
    private static SensorDataGenerator instance = null;
@@ -72,7 +77,13 @@ public class SensorDataGenerator {
          // data in to name, value and units (array 0, 1 and 2 respectively [set in Arduino code])
          String[] bits = value.split(":");
          // ADD data to List by INSTANTIATING SensorData object
-         data.add(new SensorData(bits[0], bits[0], Double.parseDouble(bits[1]), 0, bits[2]));
+          // Log.d(className, Arrays.toString(bits));
+          try {
+              data.add(new SensorData(bits[0], bits[0], Double.parseDouble(bits[1]), 0, bits[2]));
+          }
+          catch(ArrayIndexOutOfBoundsException aioobe) {
+              // Do nothing
+          }
       }
       // RETURN ArrayList containing sensor data
       return data;
