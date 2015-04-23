@@ -3,6 +3,7 @@ package jimjams.airmonitor.datastructure;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -68,13 +69,12 @@ public class Snapshot {
                (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
          List<String> providers = manager.getAllProviders();
          location = manager.getLastKnownLocation(providers.get(0));
-         timestamp = new Date(location.getTime());
       }
       catch(NullPointerException | IndexOutOfBoundsException | SecurityException |
             IllegalArgumentException e) {
          location = null;
-         timestamp = new Date();
       }
+      Log.d(className, this.toString());
    }
 
    /**
