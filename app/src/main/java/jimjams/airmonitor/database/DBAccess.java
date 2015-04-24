@@ -15,6 +15,9 @@ import jimjams.airmonitor.datastructure.Profile;
 import jimjams.airmonitor.datastructure.Snapshot;
 import jimjams.airmonitor.sensordata.SensorData;
 
+// for logging
+import android.util.Log;
+
 /**
  * Allows access to the database
  */
@@ -499,6 +502,7 @@ public class DBAccess implements AMDBContract {
             cv.put("displayValue", sd.getDisplayValue());
             database.insertWithOnConflict(CurrentDataTable.TABLE_NAME, null, cv,
                 SQLiteDatabase.CONFLICT_REPLACE);
+            Log.d(sd.getDisplayName(), "from DBAccess" + sd.getDisplayValue());
         }
     }
 
@@ -518,6 +522,7 @@ public class DBAccess implements AMDBContract {
                 double value = cursor.getDouble(cursor.getColumnIndex("value"));
                 String displayValue = cursor.getString(cursor.getColumnIndex("displayValue"));
                 data.add(new SensorData(displayName, shortName, value, displayValue));
+                cursor.moveToNext();
             }
         }
         cursor.close();
