@@ -190,7 +190,7 @@ public class EMAActivity extends ActionBarActivity {
        // ADDED null string to get this working
        // JPM
        // temp fix; needs to be switched
-      ArrayList<SensorData> data = SensorDataGenerator.getInstance().getData("");
+      ArrayList<SensorData> data = SensorDataGenerator.getInstance().getData();
 
       // Current set of existing conditions, taken from the Profile (note that the Profile is
       // updated every time a condition is added or deleted)

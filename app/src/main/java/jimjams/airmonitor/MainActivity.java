@@ -115,16 +115,15 @@ public class MainActivity extends ActionBarActivity {
         if(access.getBluetoothDeviceName() == null){
             feedbackText.setText("No Bluetooth device in memory.");
         }else {
+
             try {
                 findBT();
                 openBT();
             }
             // CATCH and print IOException JPM
             catch (IOException | NullPointerException ex) {
-                // TextView myLabel = (TextView)findViewById(R.id.feedbackText);
-
-                feedbackText.setText("Error: " + ex);
-                // beginListenForRandomData();
+                // Removed feedback text on error
+                feedbackText.setText("Error in onStart: " + ex);
             }
         }
 
@@ -136,18 +135,19 @@ public class MainActivity extends ActionBarActivity {
         if(access.getBluetoothDeviceName() == null){
             feedbackText.setText("No Bluetooth device in memory.");
         }else {
+            /*
             try {
-                findBT();
-                openBT();
+                //findBT();
+                //openBT();
             }
             // CATCH and print IOException JPM
             catch (IOException | NullPointerException ex) {
-                // TextView myLabel = (TextView)findViewById(R.id.feedbackText);
-
-                feedbackText.setText("Error: " + ex);
-                // beginListenForRandomData();
+                // Removed feedback text on error
+                feedbackText.setText("Error in onResume: " + ex);
             }
+            */
         }
+
         super.onResume();
     }
 
@@ -173,64 +173,13 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * Refreshes current air quality data in the AirQualityInset.
-     */
-    // ADDED new argument sensorData JPM
-    private void refreshAQInset(String sensorData) {
-        // Get updated data
-        // ADDED sensor data to getData method JPM
-        ArrayList<SensorData> data = SensorDataGenerator.getInstance().getData(sensorData);
-
-        // Save sensor data
-        access.updateCurrentData(data);
-
-        // Create and populate a table
-        TableLayout aqi = (TableLayout)findViewById(R.id.mainScreen_airQualityInset);
-        aqi.removeAllViews();
-
-        // Need to use LinearLayout instead of TableRow to get spanning to work
-        LinearLayout header = new LinearLayout(this);
-        header.setGravity(Gravity.CENTER_HORIZONTAL);
-
-        TextView tv = new TextView(this);
-        tv.setTypeface(tv.getTypeface(), Typeface.BOLD);
-        tv.setTextSize(FONT_UNIT, FONT_SIZE);
-
-        if(data == null || data.size() == 0) {
-            tv.setText(getResources().getString(R.string.mainScreen_airQualityInset_no_data));
-            header.addView(tv);
-            aqi.addView(header);
-        }
-        else {
-            tv.setText(getResources().getString(R.string.mainScreen_airQualityInset_data_header));
-            header.addView(tv);
-            aqi.addView(header);
-            for(SensorData sd: data) {
-                TableRow tr = new TableRow(this);
-                TextView label = new TextView(this), value = new TextView(this);
-                label.setText(sd.getDisplayName());
-                label.setPadding(1, 1, 15, 1);
-                label.setTextSize(FONT_UNIT, FONT_SIZE);
-                value.setText(sd.getDisplayValue());
-                value.setPadding(15, 1, 1, 1);
-                value.setGravity(Gravity.END);
-                value.setTextSize(FONT_UNIT, FONT_SIZE);
-                tr.addView(label);
-                tr.addView(value);
-                aqi.addView(tr);
-            }
-        }
-    }
-
-
     private void refreshAQInset() {
         // Get updated data
         // ADDED sensor data to getData method JPM
         ArrayList<SensorData> data = generator.getData();
         // Save sensor data
-        access.updateCurrentData(data);
-        Log.v(className, access.toString(DBAccess.CurrentDataTable.TABLE_NAME));
+        //access.updateCurrentData(data);
+        Log.v(className, "data from db" + access.toString(DBAccess.CurrentDataTable.TABLE_NAME));
 
         // Create and populate a table
         TableLayout aqi = (TableLayout)findViewById(R.id.mainScreen_airQualityInset);
@@ -277,6 +226,12 @@ public class MainActivity extends ActionBarActivity {
      * @param emaBtn The EMA button on the main screen
      */
     public void on_MainScreen_EMA_button_Click(View emaBtn) {
+        try {
+            closeBT();
+        }catch(IOException|NullPointerException e){
+            //
+            feedbackText.setText("cannot close bt EMA button pressed" + e);
+        }
         Intent intent = new Intent(this, EMAActivity.class);
         startActivity(intent);
     }
@@ -286,6 +241,12 @@ public class MainActivity extends ActionBarActivity {
      * @param histBtn The history button on the main screen
      */
     public void on_MainScreen_hist_button_Click(View histBtn) {
+        try {
+            closeBT();
+        }catch(IOException|NullPointerException e){
+            //
+            feedbackText.setText("cannot close bt HIST button pressed" + e);
+        }
       Intent intent = new Intent(this, HistoryActivity.class);
       startActivity(intent);
     }
@@ -299,6 +260,7 @@ public class MainActivity extends ActionBarActivity {
             closeBT();
         }catch(IOException|NullPointerException e){
             //
+            feedbackText.setText("cannot close bt BT button pressed" + e);
         }
         Intent intent = new Intent(this, BluetoothActivity.class);
         startActivity(intent);
@@ -435,9 +397,8 @@ public class MainActivity extends ActionBarActivity {
                                     {
                                         public void run()
                                         {
-                                            // SEND read data to refreshAQInsert
-                                            refreshAQInset(data);
-                                            //feedbackText.setText(data);
+                                            access.updateCurrentData(generator.getData(data));
+                                            refreshAQInset();
                                         }
                                     });
                                 }
@@ -451,49 +412,11 @@ public class MainActivity extends ActionBarActivity {
                     catch (IOException ex)
                     {
                         stopWorker = true;
-                        //feedbackLabel.setText("In Stopworker");
                     }
                 }
             }
         });
 
-        workerThread.start();
-    }
-
-    private void beginListenForRandomData() {
-        // INSTANTIATE handler
-        // handler has the scope to communicate between this class and Main Activity
-        final Handler handler = new Handler();
-        //This is the ASCII code for a newline character, which is used in Arduino code
-
-        stopWorker = false;
-        // DELIMITER for string values - unused in this class, but used in GenerateSensor Data JPM
-        // final String minorDelims = ";";
-
-        workerThread = new Thread() {
-            public void run()
-            {
-                // WHILE bluetooth thread running
-                while(!Thread.currentThread().isInterrupted() && !stopWorker)
-                {
-                    // Delay between updates
-                    try {
-                        sleep(REFRESH_DELAY);
-                        Log.d(className, "Zzzzzz...");
-                    }
-                    catch(InterruptedException ie) {
-                        stopWorker = true;
-                    }
-                    handler.post(new Runnable() {
-                        public void run() {
-                            // SEND read data to refreshAQInsert
-                            Log.d(className, "Refreshing AQ inset.");
-                            refreshAQInset();
-                        }
-                    });
-                }
-            }
-        };
         workerThread.start();
     }
 
@@ -505,4 +428,5 @@ public class MainActivity extends ActionBarActivity {
         mmSocket.close();
         //myLabel.setText("Bluetooth Closed");
     }
+
 }
