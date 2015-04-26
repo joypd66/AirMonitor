@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteFullException;
 import android.location.Location;
+import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -16,7 +17,6 @@ import jimjams.airmonitor.datastructure.Snapshot;
 import jimjams.airmonitor.sensordata.SensorData;
 
 // for logging
-import android.util.Log;
 
 /**
  * Allows access to the database
@@ -268,7 +268,10 @@ public class DBAccess implements AMDBContract {
             // support the remove(E) method
             conditions = new ArrayList<>(conditionStrings.length);
             for(String condString: conditionStrings) {
-                conditions.add(condString);
+                // Log.d(className, condString);
+                if(condString.trim().length() > 0) {
+                    conditions.add(condString);
+                }
             }
         }
         else {
@@ -365,7 +368,7 @@ public class DBAccess implements AMDBContract {
 
                 location.setTime(timestamp.getTime());
             }
-            catch(Exception e) {
+            catch(NullPointerException npe) {
                 location = null;
             }
 
@@ -465,7 +468,9 @@ public class DBAccess implements AMDBContract {
         String[] strings = str.split(ARRAY_SEPARATOR);
         ArrayList<String> list = new ArrayList<>(strings.length);
         for(String string: strings) {
-            list.add(string);
+            if(string.trim().length() > 0) {
+                list.add(string);
+            }
         }
         return list;
     }
@@ -502,7 +507,7 @@ public class DBAccess implements AMDBContract {
             cv.put("displayValue", sd.getDisplayValue());
             database.insertWithOnConflict(CurrentDataTable.TABLE_NAME, null, cv,
                 SQLiteDatabase.CONFLICT_REPLACE);
-            Log.d(sd.getDisplayName(), "from DBAccess" + sd.getDisplayValue());
+            // Log.d(sd.getDisplayName(), "from DBAccess" + sd.getDisplayValue());
         }
     }
 
