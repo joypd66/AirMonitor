@@ -13,6 +13,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,6 +23,8 @@ import jimjams.airmonitor.datastructure.EcologicalMomentaryAssessment;
 import jimjams.airmonitor.datastructure.Profile;
 import jimjams.airmonitor.datastructure.Snapshot;
 import jimjams.airmonitor.sensordata.SensorData;
+
+// import android.text.format.DateFormat;
 
 public class HistoryActivity extends ActionBarActivity {
 
@@ -48,17 +51,31 @@ public class HistoryActivity extends ActionBarActivity {
     /**
      * Used to format latitude and longitude
      */
-    private DecimalFormat df = new DecimalFormat("0.00");
+    private DecimalFormat decFormat = new DecimalFormat("0.00");
 
     /**
      * Used to identify source class for log
      */
     private String className = getClass().getSimpleName();
 
+    /**
+     * Used to format date for expando labels
+     */
+    private DateFormat dateFormat;
+
+    /**
+     * Used to format date for expando labels
+     */
+    private DateFormat timeFormat;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
+
+        // Instantiate date, time formatters
+        dateFormat = android.text.format.DateFormat.getMediumDateFormat(this);
+        timeFormat = android.text.format.DateFormat.getTimeFormat(this);
     }
 
     @Override
@@ -94,20 +111,17 @@ public class HistoryActivity extends ActionBarActivity {
     }
 
     /**
+     * <p>Populates the screen with an expandable/collapsible data table for each of the user's
+     *    Snapshots.</p>
      * <p>A note on the use of tags in this method: TextViews describing Snapshots and their
-     *    subcategories act as buttons which can expand and collapse their subcategories. Tags allow
-     *    OnClickListeners to manage this. The tag on the TextView is a Boolean indicating whether
-     *    the node is currently expanded. The tag on the containing layout is a List of
+     *    subcategories act as buttons which can expand and collapse their subcategories. Tags
+     *    allow the OnClickListener to manage this. The tag on the TextView is a Boolean indicating
+     *    whether the node is currently expanded. The tag on the containing layout is a List of
      *    expandable/collapsible child elements. When the TextView is clicked, the Boolean tag is
      *    checked, and the child elements in the parent's tag are either hidden or shown, and the
      *    Boolean tag is toggled.</p>
-     * <p>This method is needlessly long and badly needs to be broken down into smaller pieces, but
-     *    it's late and I'm tired.</p>
      */
     private void populateHistory() {
-
-        // Log.d(className, DBAccess.getDBAccess().toString(AMDBContract.SnapshotTable.TABLE_NAME));
-
         // The user's Profile
         Profile profile = Profile.getProfile();
         long userId = profile.getId();
@@ -116,18 +130,15 @@ public class HistoryActivity extends ActionBarActivity {
         LinearLayout layout = (LinearLayout)findViewById(R.id.history_layout);
 
         // Add user id row
+/* I don't think this is really useful
         TextView userIdRow = new TextView(this);
         userIdRow.setText("User ID: " + userId);
         userIdRow.setTextSize(FONT_UNIT, LABEL_FONT_SIZE);
-        //userIdRow.setTextColor();
         layout.addView(userIdRow);
+*/
 
         // Add a row for each Snapshot
         ArrayList<Snapshot> snapshots = DBAccess.getDBAccess().getSnapshots(userId);
-        // Log.d(className, snapshots.size() + " Snapshots loaded.");
-        for(Snapshot snap: snapshots) {
-            // Log.d(className, snap.toString());
-        }
 
         // LinearLayout containing a row for each Snapshot
         LinearLayout mainSnapshotLayout = new LinearLayout(this);
@@ -135,301 +146,353 @@ public class HistoryActivity extends ActionBarActivity {
         mainSnapshotLayout.setLayoutParams(new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
+        // Set up listener for table expansion
+        // Listener that expands or collapses categories in the history screen
+        View.OnClickListener listener = new View.OnClickListener() {
+            /**
+             * Expands or collapses categories in the history screen.
+             * @param v The View that was clicked
+             */
+            public void onClick(View v) {
+                Boolean tag = (Boolean) v.getTag();
+                LinearLayout parent = (LinearLayout) v.getParent();
+                ArrayList<View> kids = (ArrayList<View>) parent.getTag();
+                if(tag) {
+                    // Snapshot is expanded; must be collapsed
+                    for(View kid: kids) {
+                        parent.removeView(kid);
+                    }
+                }
+                else {
+                    // Snapshot is collapsed; must be expanded
+                    for(View kid: kids) {
+                        // Log.d(className, kid.toString());
+                        parent.addView(kid);
+                    }
+                }
+                // Toggle the boolean tag
+                v.setTag(!tag);
+            }
+        };
+
         // Each Snapshot gets another LinearLayout
         for(Snapshot snapshot: snapshots) {
-            LinearLayout individualSnapshotLayout = new LinearLayout(this);
-            individualSnapshotLayout.setOrientation(LinearLayout.VERTICAL);
-            individualSnapshotLayout.setLayoutParams(new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-            // Tag is a list of expandable/collapsible child component
-            individualSnapshotLayout.setTag(new ArrayList<View>());
-
-            // Add date/time as label This TextView will also serve as an expand button
-            Date timestamp = snapshot.getTimestamp();
-            TextView individualSnapshotLabel = new TextView(this);
-            individualSnapshotLabel.setText(timestamp.toString());
-            individualSnapshotLabel.setTextSize(FONT_UNIT, LABEL_FONT_SIZE);
-            individualSnapshotLayout.addView(individualSnapshotLabel);
-
-            // Tag is true if following siblings are displayed
-            individualSnapshotLabel.setTag(false);
-
-            //**************************************************************************************
-
-            // Create a LinearLayout for each category under Snapshot
-
-            // Layout for location
-            LinearLayout locationLayout = new LinearLayout(this);
-            locationLayout.setOrientation(LinearLayout.VERTICAL);
-
-            // Add padding to indent
-            locationLayout.setPadding(locationLayout.getPaddingLeft() + INDENT,
-                    locationLayout.getPaddingTop(), locationLayout.getPaddingRight(),
-                    locationLayout.getPaddingBottom());
-
-            // Tag is a list of expandable/collapsible child components
-            locationLayout.setTag(new ArrayList<View>());
-
-            // Add this layout to the parent's tag
-            ((ArrayList<View>)individualSnapshotLayout.getTag()).add(locationLayout);
-
-            // Label for the location data
-            TextView locationLabel = new TextView(this);
-            locationLabel.setText(R.string.history_screen_location_label);
-            locationLabel.setTextSize(FONT_UNIT, LABEL_FONT_SIZE);
-            locationLayout.addView(locationLabel);
-
-            // Tag is true if following siblings are displayed
-            locationLabel.setTag(false);
-
-            // TableLayout to display location data
-            TableLayout locationTable = new TableLayout(this);
-            locationTable.setPadding(locationTable.getPaddingLeft() + INDENT,
-                    locationTable.getPaddingTop(), locationTable.getPaddingRight(),
-                    locationTable.getPaddingBottom());
-
-            // Add this layout to the parent's tag
-            ((ArrayList<View>)locationLayout.getTag()).add(locationTable);
-
-            // Get location
-            Location location = snapshot.getLocation();
-
-            if(location == null) {
-                TableRow tr = new TableRow(this);
-                TextView tv = new TextView(this);
-                tv.setText(R.string.history_screen_no_data);
-                tv.setTextSize(FONT_UNIT, TABLE_FONT_SIZE);
-                tr.addView(tv);
-                locationTable.addView(tr);
-            }
-            else {
-                // Populate the table
-                // Log.d(className, "Adding lat=" + location.getLatitude() + " long=" +
-                        // location.getLongitude());
-                locationTable.addView(makeTableRow("latitude", df.format(location.getLatitude())));
-                locationTable.addView(makeTableRow("longitude",
-                        df.format(location.getLongitude())));
-            } // if location == null
-
-            //**************************************************************************************
-
-            // Layout for sensor data
-            LinearLayout sensorLayout = new LinearLayout(this);
-            sensorLayout.setOrientation(LinearLayout.VERTICAL);
-
-            // Add padding to indent
-            sensorLayout.setPadding(individualSnapshotLayout.getPaddingLeft() + INDENT,
-                    individualSnapshotLayout.getPaddingTop(),
-                    individualSnapshotLayout.getPaddingRight(),
-                    individualSnapshotLayout.getPaddingBottom());
-
-            // Tag is a list of expandable/collapsible child components
-            sensorLayout.setTag(new ArrayList<View>());
-
-            // Add this layout to the parent's tag
-            ((ArrayList<View>)individualSnapshotLayout.getTag()).add(sensorLayout);
-
-            // Label for the sensor data
-            TextView sensorLabel = new TextView(this);
-            sensorLabel.setText(R.string.history_screen_sensor_label);
-            sensorLabel.setTextSize(FONT_UNIT, LABEL_FONT_SIZE);
-            sensorLayout.addView(sensorLabel);
-
-            // Tag is true if following siblings are displayed
-            sensorLabel.setTag(false);
-
-            // TableLayout to display sensor data
-            TableLayout sensorTable = new TableLayout(this);
-            sensorTable.setPadding(sensorTable.getPaddingLeft() + INDENT,
-                    sensorTable.getPaddingTop(), sensorTable.getPaddingRight(),
-                    sensorTable.getPaddingBottom());
-
-            // Add this layout to the parent's tag
-            ((ArrayList<View>)sensorLayout.getTag()).add(sensorTable);
-
-            // Get the sensor data
-            ArrayList<SensorData> sensorData = snapshot.getData();
-
-            // Populate the table
-            if(sensorData.size() == 0) {
-                TableRow tr = new TableRow(this);
-                TextView tv = new TextView(this);
-                tv.setText(R.string.history_screen_no_data);
-                tv.setTextSize(FONT_UNIT, TABLE_FONT_SIZE);
-                tr.addView(tv);
-                sensorTable.addView(tr);
-            }
-            else {
-                for(SensorData sd: sensorData) {
-                    sensorTable.addView(makeTableRow(sd.getDisplayName(), sd.getDisplayValue()));
-                }
-            }
-
-            //**************************************************************************************
-
-            // Layout for EMA
-            LinearLayout emaLayout = new LinearLayout(this);
-            emaLayout.setOrientation(LinearLayout.VERTICAL);
-
-            // Add padding to indent
-            emaLayout.setPadding(individualSnapshotLayout.getPaddingLeft() + INDENT,
-                    individualSnapshotLayout.getPaddingTop(),
-                    individualSnapshotLayout.getPaddingRight(),
-                    individualSnapshotLayout.getPaddingBottom());
-
-            // Tag is a list of expandable/collapsible child components
-            emaLayout.setTag(new ArrayList<View>());
-
-            // Add this layout to the parent's tag
-            ((ArrayList<View>)individualSnapshotLayout.getTag()).add(emaLayout);
-
-            // Label for the EMA
-            TextView emaLabel = new TextView(this);
-            emaLabel.setText(R.string.history_screen_ema_label);
-            emaLabel.setTextSize(FONT_UNIT, LABEL_FONT_SIZE);
-            emaLayout.addView(emaLabel);
-
-            // Tag is a Boolean which is true when the layout is expanded
-            emaLabel.setTag(false);
-
-            // TableLayout to display ema data
-            TableLayout emaTable = new TableLayout(this);
-            emaTable.setPadding(emaTable.getPaddingLeft() + INDENT, emaTable.getPaddingTop(),
-                    emaTable.getPaddingRight(), emaTable.getPaddingBottom());
-
-            // Add this layout to the parent's tag
-            ((ArrayList<View>)emaLayout.getTag()).add(emaTable);
-
-            // Get the ema data
-            EcologicalMomentaryAssessment ema = snapshot.getEma();
-
-            // Populate the table
-            emaTable.addView(makeTableRow(getResources().getString(R.string.history_screen_ema_indoors_label),
-                    String.valueOf(ema.getIndoors())));
-            emaTable.addView(makeTableRow(getResources().getString(R.string.history_screen_ema_reportedLocation_label),
-                    ema.getReportedLocation()));
-            emaTable.addView(makeTableRow(getResources().getString(R.string.history_screen_ema_activity_label),
-                    ema.getActivity()));
-            ArrayList<String> companions = ema.getCompanions();
-            String companionString = "";
-            for(int i = 0; i < companions.size(); i++) {
-                if(i > 0) {
-                    companionString += "\n";
-                }
-                companionString += companions.get(i);
-            }
-            emaTable.addView(makeTableRow(getResources().getString(R.string.history_screen_ema_companion_label),
-                    companionString));
-            emaTable.addView(makeTableRow(getResources().getString(R.string.history_screen_ema_airQuality_label),
-                    String.valueOf(ema.getAirQuality())));
-            emaTable.addView(makeTableRow(getResources().getString(R.string.history_screen_ema_belief_label),
-                    String.valueOf(ema.getBelief())));
-            emaTable.addView(makeTableRow(getResources().getString(R.string.history_screen_ema_intention_label),
-                    String.valueOf(ema.getIntention())));
-            emaTable.addView(makeTableRow(getResources().getString(R.string.history_screen_ema_behavior_label),
-                    String.valueOf(ema.getBehavior())));
-            emaTable.addView(makeTableRow(getResources().getString(R.string.history_screen_ema_barrier_label),
-                    String.valueOf(ema.getBarrier())));
-
-            //*****************************************************************************************
-
-            // Layout for existing conditions
-            LinearLayout conditionLayout = new LinearLayout(this);
-            conditionLayout.setOrientation(LinearLayout.VERTICAL);
-
-            // Add padding to indent
-            conditionLayout.setPadding(individualSnapshotLayout.getPaddingLeft() + INDENT,
-                    individualSnapshotLayout.getPaddingTop(),
-                    individualSnapshotLayout.getPaddingRight(),
-                    individualSnapshotLayout.getPaddingBottom());
-
-            // Tag is a list of expandable/collapsible child components
-            conditionLayout.setTag(new ArrayList<View>());
-
-            // Add this layout to the parent's tag
-            ((ArrayList<View>)individualSnapshotLayout.getTag()).add(conditionLayout);
-
-            // Label for the existing conditions
-            TextView conditionLabel = new TextView(this);
-            conditionLabel.setText(R.string.history_screen_condition_label);
-            conditionLabel.setTextSize(FONT_UNIT, LABEL_FONT_SIZE);
-            conditionLayout.addView(conditionLabel);
-
-            // Tag is a Boolean which is true when the layout is expanded
-            conditionLabel.setTag(false);
-
-            // LinearLayout to display existing conditions data. For consistency with other
-            // categories, I'm calling it a table
-            LinearLayout conditionTable = new TableLayout(this);
-            conditionTable.setPadding(conditionTable.getPaddingLeft() + INDENT,
-                    conditionTable.getPaddingTop(), conditionTable.getPaddingRight(),
-                    conditionTable.getPaddingBottom());
-
-            // Add this layout to the parent's tag
-            ((ArrayList<View>)conditionLayout.getTag()).add(conditionTable);
-
-            // Get the existing conditions data
-            ArrayList<String> conditions = snapshot.getConditions();
-
-             // Populate the layout
-            if(conditions.size() == 0) {
-                // If no conditions, display message
-                TextView condView = new TextView(this);
-                condView.setText(R.string.history_screen_no_conds);
-                condView.setTextSize(FONT_UNIT, TABLE_FONT_SIZE);
-                conditionTable.addView(condView);
-            }
-            else {
-                for(String cond: conditions) {
-                    TextView condView = new TextView(this);
-                    condView.setText(cond);
-                    condView.setTextSize(FONT_UNIT, TABLE_FONT_SIZE);
-                    conditionTable.addView(condView);
-                }
-            }
-
-            // Set up listener for table expansion
-            // Listener that expands or collapses categories in the history screen
-            View.OnClickListener listener = new View.OnClickListener() {
-                /**
-                 * Expands or collapses categories in the history screen.
-                 * @param v The View that was clicked
-                 */
-                public void onClick(View v) {
-                    Boolean tag = (Boolean) v.getTag();
-                    LinearLayout parent = (LinearLayout) v.getParent();
-                    ArrayList<View> kids = (ArrayList<View>) parent.getTag();
-                    if(tag) {
-                        // Snapshot is expanded; must be collapsed
-                        for (View kid : kids) {
-                            parent.removeView(kid);
-                        }
-                    } else {
-                        // Snapshot is collapsed; must be expanded
-                        for (View kid : kids) {
-                            // Log.d(className, kid.toString());
-                            parent.addView(kid);
-                        }
-                    }
-                    // Toggle the boolean tag
-                    v.setTag(!tag);
-                }
-            };
-
-            individualSnapshotLabel.setOnClickListener(listener);
-            if(locationLabel != null) {
-                locationLabel.setOnClickListener(listener);
-            }
-            sensorLabel.setOnClickListener(listener);
-            emaLabel.setOnClickListener(listener);
-            conditionLabel.setOnClickListener(listener);
+            LinearLayout individualSnapshotLayout = getIndividualSnapshotLayout(snapshot, listener);
 
             // Add to parent
             mainSnapshotLayout.addView(individualSnapshotLayout);
         }
-
         layout.addView(mainSnapshotLayout);
+    }
+
+    /**
+     * Creates a LinearLayout for a single Snapshot's data.
+     * @param snapshot The Snapshot
+     * @param listener The click listener used to expand/collapse data
+     * @return LinearLayout for a single Snapshot's data
+     */
+    private LinearLayout getIndividualSnapshotLayout(Snapshot snapshot,
+            View.OnClickListener listener) {
+        LinearLayout snapshotLayout = new LinearLayout(this);
+        snapshotLayout.setOrientation(LinearLayout.VERTICAL);
+        snapshotLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        // Tag is a list of expandable/collapsible child component
+        snapshotLayout.setTag(new ArrayList<View>());
+
+        // Add date/time as label This TextView will also serve as an expand button
+        Date timestamp = snapshot.getTimestamp();
+        TextView individualSnapshotLabel = new TextView(this);
+        individualSnapshotLabel.setText(formatDate(timestamp));
+        individualSnapshotLabel.setTextSize(FONT_UNIT, LABEL_FONT_SIZE);
+        snapshotLayout.addView(individualSnapshotLabel);
+
+        // Tag is true if following siblings are displayed
+        individualSnapshotLabel.setTag(false);
+
+        // Create a LinearLayout for each category under Snapshot
+
+        // Layout for location
+        LinearLayout locationLayout = getLocationLayout(snapshotLayout, listener,
+                snapshot.getLocation());
+
+        // Layout for sensor data
+        LinearLayout sensorLayout = getSensorLayout(snapshotLayout, listener, snapshot.getData());
+
+        // Layout for EMA
+        LinearLayout emaLayout = getEmaLayout(snapshotLayout, listener, snapshot.getEma());
+
+        // Layout for existing conditions
+        LinearLayout conditionLayout = getConditionLayout(snapshotLayout, listener,
+                snapshot.getConditions());
+
+        individualSnapshotLabel.setOnClickListener(listener);
+        return snapshotLayout;
+    }
+
+    /**
+     * Creates a LinearLayout for a snapshot's location data.
+     * @param snapshotLayout The parent layout
+     * @param listener The click listener used to expand/collapse data
+     * @param location The location
+     * @return LinearLayout for a snapshot's location data
+     */
+    private LinearLayout getLocationLayout(LinearLayout snapshotLayout,
+            View.OnClickListener listener, Location location) {
+        LinearLayout locationLayout = new LinearLayout(this);
+        locationLayout.setOrientation(LinearLayout.VERTICAL);
+
+        // Add padding to indent
+        locationLayout.setPadding(locationLayout.getPaddingLeft() + INDENT,
+                locationLayout.getPaddingTop(), locationLayout.getPaddingRight(),
+                locationLayout.getPaddingBottom());
+
+        // Tag is a list of expandable/collapsible child components
+        locationLayout.setTag(new ArrayList<View>());
+
+        // Add this layout to the parent's tag
+        ((ArrayList<View>)snapshotLayout.getTag()).add(locationLayout);
+
+        // Label for the location data
+        TextView locationLabel = new TextView(this);
+        locationLabel.setText(R.string.history_screen_location_label);
+        locationLabel.setTextSize(FONT_UNIT, LABEL_FONT_SIZE);
+        locationLayout.addView(locationLabel);
+
+        // Tag is true if following siblings are displayed
+        locationLabel.setTag(false);
+
+        // Set listener
+        locationLabel.setOnClickListener(listener);
+
+        // TableLayout to display location data
+        TableLayout locationTable = new TableLayout(this);
+        locationTable.setPadding(locationTable.getPaddingLeft() + INDENT,
+                locationTable.getPaddingTop(), locationTable.getPaddingRight(),
+                locationTable.getPaddingBottom());
+
+        // Add this layout to the parent's tag
+        ((ArrayList<View>)locationLayout.getTag()).add(locationTable);
+
+        if(location == null) {
+            TableRow tr = new TableRow(this);
+            TextView tv = new TextView(this);
+            tv.setText(R.string.history_screen_no_data);
+            tv.setTextSize(FONT_UNIT, TABLE_FONT_SIZE);
+            tr.addView(tv);
+            locationTable.addView(tr);
+        }
+        else {
+            // Populate the table
+            // Log.d(className, "Adding lat=" + location.getLatitude() + " long=" +
+                    // location.getLongitude());
+            locationTable.addView(makeTableRow("latitude",
+                    decFormat.format(location.getLatitude())));
+            locationTable.addView(makeTableRow("longitude",
+                    decFormat.format(location.getLongitude())));
+        } // if location == null
+        return locationLayout;
+    }
+
+    /**
+     * Creates a LinearLayout for a snapshot's sensor data.
+     * @param snapshotLayout The parent layout
+     * @param listener The click listener used to expand/collapse data
+     * @param sensorData Sensor data
+     * @return LinearLayout for a snapshot's sensor data
+     */
+    private LinearLayout getSensorLayout(LinearLayout snapshotLayout, View.OnClickListener listener,
+            ArrayList<SensorData> sensorData) {
+        LinearLayout sensorLayout = new LinearLayout(this);
+        sensorLayout.setOrientation(LinearLayout.VERTICAL);
+
+        // Add padding to indent
+        sensorLayout.setPadding(sensorLayout.getPaddingLeft() + INDENT,
+                sensorLayout.getPaddingTop(), sensorLayout.getPaddingRight(),
+                sensorLayout.getPaddingBottom());
+
+        // Tag is a list of expandable/collapsible child components
+        sensorLayout.setTag(new ArrayList<View>());
+
+        // Add this layout to the parent's tag
+        ((ArrayList<View>) snapshotLayout.getTag()).add(sensorLayout);
+
+        // Label for the sensor data
+        TextView sensorLabel = new TextView(this);
+        sensorLabel.setText(R.string.history_screen_sensor_label);
+        sensorLabel.setTextSize(FONT_UNIT, LABEL_FONT_SIZE);
+        sensorLayout.addView(sensorLabel);
+
+        // Tag is true if following siblings are displayed
+        sensorLabel.setTag(false);
+
+        // Set listener
+        sensorLabel.setOnClickListener(listener);
+
+        // TableLayout to display sensor data
+        TableLayout sensorTable = new TableLayout(this);
+        sensorTable.setPadding(sensorTable.getPaddingLeft() + INDENT,
+                sensorTable.getPaddingTop(), sensorTable.getPaddingRight(),
+                sensorTable.getPaddingBottom());
+
+        // Add this layout to the parent's tag
+        ((ArrayList<View>) sensorLayout.getTag()).add(sensorTable);
+
+        // Populate the table
+        if(sensorData.size() == 0) {
+            TableRow tr = new TableRow(this);
+            TextView tv = new TextView(this);
+            tv.setText(R.string.history_screen_no_data);
+            tv.setTextSize(FONT_UNIT, TABLE_FONT_SIZE);
+            tr.addView(tv);
+            sensorTable.addView(tr);
+        }
+        else {
+            for(SensorData sd: sensorData) {
+                sensorTable.addView(makeTableRow(sd.getDisplayName(), sd.getDisplayValue()));
+            }
+        }
+        return sensorLayout;
+    }
+
+
+    /**
+     * Creates a LinearLayout for a snapshot's EMA data.
+     * @param snapshotLayout The parent layout
+     * @param listener The click listener used to expand/collapse data
+     * @param ema Ecological Momentary Assessment
+     * @return LinearLayout for a snapshot's EMA data
+     */
+    private LinearLayout getEmaLayout(LinearLayout snapshotLayout, View.OnClickListener listener,
+            EcologicalMomentaryAssessment ema) {
+        LinearLayout emaLayout = new LinearLayout(this);
+        emaLayout.setOrientation(LinearLayout.VERTICAL);
+
+        // Add padding to indent
+        emaLayout.setPadding(snapshotLayout.getPaddingLeft() + INDENT,
+                snapshotLayout.getPaddingTop(), snapshotLayout.getPaddingRight(),
+                snapshotLayout.getPaddingBottom());
+
+        // Tag is a list of expandable/collapsible child components
+        emaLayout.setTag(new ArrayList<View>());
+
+        // Add this layout to the parent's tag
+        ((ArrayList<View>) snapshotLayout.getTag()).add(emaLayout);
+
+        // Label for the EMA
+        TextView emaLabel = new TextView(this);
+        emaLabel.setText(R.string.history_screen_ema_label);
+        emaLabel.setTextSize(FONT_UNIT, LABEL_FONT_SIZE);
+        emaLayout.addView(emaLabel);
+
+        // Tag is a Boolean which is true when the layout is expanded
+        emaLabel.setTag(false);
+
+        // Set listener
+        emaLabel.setOnClickListener(listener);
+
+        // TableLayout to display ema data
+        TableLayout emaTable = new TableLayout(this);
+        emaTable.setPadding(emaTable.getPaddingLeft() + INDENT, emaTable.getPaddingTop(),
+                emaTable.getPaddingRight(), emaTable.getPaddingBottom());
+
+        // Add this layout to the parent's tag
+        ((ArrayList<View>) emaLayout.getTag()).add(emaTable);
+
+        // Populate the table
+        emaTable.addView(makeTableRow(getResources().getString(
+                R.string.history_screen_ema_indoors_label), String.valueOf(ema.getIndoors())));
+        emaTable.addView(makeTableRow(getResources().getString(
+                R.string.history_screen_ema_reportedLocation_label), ema.getReportedLocation()));
+        emaTable.addView(makeTableRow(getResources().getString(
+                R.string.history_screen_ema_activity_label), ema.getActivity()));
+        ArrayList<String> companions = ema.getCompanions();
+        String companionString = "";
+        for (int i = 0; i < companions.size(); i++) {
+            if (i > 0) {
+                companionString += "\n";
+            }
+            companionString += companions.get(i);
+        }
+        emaTable.addView(makeTableRow(getResources().getString(
+                R.string.history_screen_ema_companion_label), companionString));
+        emaTable.addView(makeTableRow(getResources().getString(
+                        R.string.history_screen_ema_airQuality_label),
+                String.valueOf(ema.getAirQuality())));
+        emaTable.addView(makeTableRow(getResources().getString(
+                R.string.history_screen_ema_belief_label), String.valueOf(ema.getBelief())));
+        emaTable.addView(makeTableRow(getResources().getString(
+                R.string.history_screen_ema_intention_label), String.valueOf(ema.getIntention())));
+        emaTable.addView(makeTableRow(getResources().getString(
+                R.string.history_screen_ema_behavior_label), String.valueOf(ema.getBehavior())));
+        emaTable.addView(makeTableRow(getResources().getString(
+                R.string.history_screen_ema_barrier_label), String.valueOf(ema.getBarrier())));
+        return emaLayout;
+    }
+
+    /**
+     * Creates a LinearLayout for a snapshot's existing conditions.
+     * @param snapshotLayout The parent layout
+     * @param listener The click listener used to expand/collapse data
+     * @param conditions Snapshot's existing conditions
+     * @return LinearLayout for a snapshot's existing conditions
+     */
+    private LinearLayout getConditionLayout(LinearLayout snapshotLayout,
+            View.OnClickListener listener, ArrayList<String> conditions) {
+        LinearLayout conditionLayout = new LinearLayout(this);
+        conditionLayout.setOrientation(LinearLayout.VERTICAL);
+
+        // Add padding to indent
+        conditionLayout.setPadding(snapshotLayout.getPaddingLeft() + INDENT,
+                snapshotLayout.getPaddingTop(), snapshotLayout.getPaddingRight(),
+                snapshotLayout.getPaddingBottom());
+
+        // Tag is a list of expandable/collapsible child components
+        conditionLayout.setTag(new ArrayList<View>());
+
+        // Add this layout to the parent's tag
+        ((ArrayList<View>)snapshotLayout.getTag()).add(conditionLayout);
+
+        // Label for the existing conditions
+        TextView conditionLabel = new TextView(this);
+        conditionLabel.setText(R.string.history_screen_condition_label);
+        conditionLabel.setTextSize(FONT_UNIT, LABEL_FONT_SIZE);
+        conditionLayout.addView(conditionLabel);
+
+        // Tag is a Boolean which is true when the layout is expanded
+        conditionLabel.setTag(false);
+
+        // Set listener
+        conditionLabel.setOnClickListener(listener);
+
+        // LinearLayout to display existing conditions data. For consistency with other
+        // categories, I'm calling it a table
+        LinearLayout conditionTable = new TableLayout(this);
+        conditionTable.setPadding(conditionTable.getPaddingLeft() + INDENT,
+                conditionTable.getPaddingTop(), conditionTable.getPaddingRight(),
+                conditionTable.getPaddingBottom());
+
+        // Add this layout to the parent's tag
+        ((ArrayList<View>)conditionLayout.getTag()).add(conditionTable);
+
+         // Populate the layout
+        if(conditions.size() == 0) {
+            // If no conditions, display message
+            TextView condView = new TextView(this);
+            condView.setText(R.string.history_screen_no_conds);
+            condView.setTextSize(FONT_UNIT, TABLE_FONT_SIZE);
+            conditionTable.addView(condView);
+        }
+        else {
+            for(String cond: conditions) {
+                TextView condView = new TextView(this);
+                condView.setText(cond);
+                condView.setTextSize(FONT_UNIT, TABLE_FONT_SIZE);
+                conditionTable.addView(condView);
+            }
+        }
+        return conditionLayout;
     }
 
     /**
@@ -451,5 +514,14 @@ public class HistoryActivity extends ActionBarActivity {
         tr.addView(c1);
         tr.addView(c2);
         return tr;
+    }
+
+    /**
+     * Formats a date to be used as an expando label.
+     * @param date The date to be formatted
+     * @return Formatted date
+     */
+    private String formatDate(Date date) {
+        return dateFormat.format(date) + ", " + timeFormat.format(date);
     }
 }
