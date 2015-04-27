@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteFullException;
 import android.location.Location;
-import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -192,6 +191,10 @@ public class DBAccess implements AMDBContract {
             cv.put("longitude", loc.getLongitude());
             cv.put("provider", loc.getProvider());
         }
+        // "null" in the provider column indicates that the location is null
+        else {
+            cv.put("provider", "null");
+        }
         cv.put("sensorData", sensorIdString);
         cv.put("conditions", conditionString);
         cv.put("ema", emaId);
@@ -338,7 +341,12 @@ public class DBAccess implements AMDBContract {
             try {
                 int provIndex = cursor.getColumnIndex("provider");
                 if(provIndex > -1) {
-                    location = new Location(cursor.getString(provIndex));
+                    // "null" in the provider column indicates a null location
+                    String provider = cursor.getString(provIndex);
+                    if(provider.equals("null")) {
+                        throw new NullPointerException("Provider is null.");
+                    }
+                    location = new Location(provider);
                 }
 
                 int latIndex = cursor.getColumnIndex("latitude");

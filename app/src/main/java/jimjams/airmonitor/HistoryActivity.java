@@ -176,10 +176,8 @@ public class HistoryActivity extends ActionBarActivity {
 
         // Each Snapshot gets another LinearLayout
         for(Snapshot snapshot: snapshots) {
-            LinearLayout individualSnapshotLayout = getIndividualSnapshotLayout(snapshot, listener);
-
             // Add to parent
-            mainSnapshotLayout.addView(individualSnapshotLayout);
+            mainSnapshotLayout.addView(getIndividualSnapshotLayout(snapshot, listener));
         }
         layout.addView(mainSnapshotLayout);
     }
@@ -203,33 +201,28 @@ public class HistoryActivity extends ActionBarActivity {
 
         // Add date/time as label. This TextView will also serve as an expand button
         Date timestamp = snapshot.getTimestamp();
-        TextView individualSnapshotLabel = new TextView(this);
-        individualSnapshotLabel.setText(formatDate(timestamp));
-        individualSnapshotLabel.setTextSize(FONT_UNIT, LABEL_FONT_SIZE);
-        snapshotLayout.addView(individualSnapshotLabel);
+        TextView snapshotLabel = new TextView(this);
+        snapshotLabel.setText(formatDate(timestamp));
+        snapshotLabel.setTextSize(FONT_UNIT, LABEL_FONT_SIZE);
+        snapshotLayout.addView(snapshotLabel);
 
         // Tag is true if following siblings are displayed
-        individualSnapshotLabel.setTag(false);
+        snapshotLabel.setTag(false);
 
         // Create a LinearLayout for each category under Snapshot
-
         // Layout for location
-        LinearLayout locationLayout = getLocationLayout(listener, snapshot.getLocation());
-        snapshotTag.add(locationLayout);
+        snapshotTag.add(getLocationLayout(listener, snapshot.getLocation()));
 
         // Layout for sensor data
-        LinearLayout sensorLayout  = getSensorLayout(listener, snapshot.getData());
-        snapshotTag.add(sensorLayout);
+        snapshotTag.add(getSensorLayout(listener, snapshot.getData()));
 
         // Layout for EMA
-        LinearLayout emaLayout = getEmaLayout(listener, snapshot.getEma());
-        snapshotTag.add(emaLayout);
+        snapshotTag.add(getEmaLayout(listener, snapshot.getEma()));
 
         // Layout for existing conditions
-        LinearLayout conditionLayout = getConditionLayout(listener, snapshot.getConditions());
-        snapshotTag.add(conditionLayout);
+        snapshotTag.add(getConditionLayout(listener, snapshot.getConditions()));
 
-        individualSnapshotLabel.setOnClickListener(listener);
+        snapshotLabel.setOnClickListener(listener);
         return snapshotLayout;
     }
 
@@ -394,8 +387,8 @@ public class HistoryActivity extends ActionBarActivity {
                 R.string.history_screen_ema_activity_label), ema.getActivity()));
         ArrayList<String> companions = ema.getCompanions();
         String companionString = "";
-        for (int i = 0; i < companions.size(); i++) {
-            if (i > 0) {
+        for(int i = 0; i < companions.size(); i++) {
+            if(i > 0) {
                 companionString += "\n";
             }
             companionString += companions.get(i);
@@ -447,8 +440,8 @@ public class HistoryActivity extends ActionBarActivity {
         // Set listener
         conditionLabel.setOnClickListener(listener);
 
-        // LinearLayout to display existing conditions data. For consistency with other
-        // categories, I'm calling it a table
+        // LinearLayout to display existing conditions data. For consistency with other categories,
+        // I'm calling it a table
         LinearLayout conditionTable = new TableLayout(this);
         conditionTable.setPadding(conditionTable.getPaddingLeft() + INDENT,
                 conditionTable.getPaddingTop(), conditionTable.getPaddingRight(),
@@ -457,7 +450,7 @@ public class HistoryActivity extends ActionBarActivity {
         // Add this layout to the parent's tag
         ((ArrayList<View>)conditionLayout.getTag()).add(conditionTable);
 
-         // Populate the layout
+        // Populate the layout
         if(conditions.size() == 0) {
             // If no conditions, display message
             TextView condView = new TextView(this);
