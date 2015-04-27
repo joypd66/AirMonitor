@@ -15,9 +15,6 @@ import jimjams.airmonitor.datastructure.Profile;
 import jimjams.airmonitor.datastructure.Snapshot;
 import jimjams.airmonitor.sensordata.SensorData;
 
-// for logging
-import android.util.Log;
-
 /**
  * Allows access to the database
  */
@@ -53,8 +50,6 @@ public class DBAccess implements AMDBContract {
 
         // Database file
         File dbFile = new File(path, DB_FILENAME);
-
-        // Log.d(className, "File: " + dbFile.getAbsolutePath());
         database = SQLiteDatabase.openOrCreateDatabase(dbFile, null);
 
         // Make sure the necessary tables exist
@@ -142,6 +137,7 @@ public class DBAccess implements AMDBContract {
             cv.put("displayValue", datum.getDisplayValue());
             ids.add(database.insert(SensorDataTable.TABLE_NAME, null, cv));
         }
+
         // Return the IDs of the inserted rows
         return ids;
     }
@@ -181,6 +177,7 @@ public class DBAccess implements AMDBContract {
 
         // Save the EMA and get its ID
         EcologicalMomentaryAssessment ema = snapshot.getEma();
+
         // Save the EMA to the database
         long emaId = access.saveEMA(ema);
 
@@ -193,6 +190,10 @@ public class DBAccess implements AMDBContract {
             cv.put("latitude", loc.getLatitude());
             cv.put("longitude", loc.getLongitude());
             cv.put("provider", loc.getProvider());
+        }
+        // "null" in the provider column indicates that the location is null
+        else {
+            cv.put("provider", "null");
         }
         cv.put("sensorData", sensorIdString);
         cv.put("conditions", conditionString);
@@ -228,20 +229,19 @@ public class DBAccess implements AMDBContract {
     public long getProfileId() throws SQLiteFullException {
         Cursor cursor = database.rawQuery("SELECT id FROM " + ProfileTable.TABLE_NAME, null);
         cursor.moveToFirst();
-        long result;
+        long id;
         int count = cursor.getCount();
-        // Log.d(className, "cursor count: " + count);
         if(count == 0) {
-            result = 0;
+            id = 0;
         }
         else if(count == 1) {
-            result = cursor.getInt(0);
+            id = cursor.getInt(0);
         }
         else {
             throw new SQLiteFullException("Too many Profiles in database.");
         }
         cursor.close();
-        return result;
+        return id;
     }
 
     /**
@@ -258,7 +258,6 @@ public class DBAccess implements AMDBContract {
         ArrayList<String> conditions;
         if(cursor.getCount() == 0) {
             conditions = new ArrayList<>();
-            // Log.d(className, "No profile in database.");
         }
         else if(cursor.getCount() == 1) {
             String conditionString = cursor.getString(0);
@@ -268,7 +267,9 @@ public class DBAccess implements AMDBContract {
             // support the remove(E) method
             conditions = new ArrayList<>(conditionStrings.length);
             for(String condString: conditionStrings) {
-                conditions.add(condString);
+                if(condString.trim().length() > 0) {
+                    conditions.add(condString);
+                }
             }
         }
         else {
@@ -340,7 +341,12 @@ public class DBAccess implements AMDBContract {
             try {
                 int provIndex = cursor.getColumnIndex("provider");
                 if(provIndex > -1) {
-                    location = new Location(cursor.getString(provIndex));
+                    // "null" in the provider column indicates a null location
+                    String provider = cursor.getString(provIndex);
+                    if(provider.equals("null")) {
+                        throw new NullPointerException("Provider is null.");
+                    }
+                    location = new Location(provider);
                 }
 
                 int latIndex = cursor.getColumnIndex("latitude");
@@ -365,7 +371,7 @@ public class DBAccess implements AMDBContract {
 
                 location.setTime(timestamp.getTime());
             }
-            catch(Exception e) {
+            catch(NullPointerException npe) {
                 location = null;
             }
 
@@ -444,12 +450,10 @@ public class DBAccess implements AMDBContract {
                 " WHERE id = " + id, null);
         if(cursor.getCount() > 0) {
             cursor.moveToFirst();
-
             String displayName = cursor.getString(cursor.getColumnIndex("displayName"));
             String shortName = cursor.getString(cursor.getColumnIndex("shortName"));
             double value = cursor.getDouble(cursor.getColumnIndex("value"));
             String displayValue = cursor.getString(cursor.getColumnIndex("displayValue"));
-
             data = new SensorData(displayName, shortName, value, displayValue);
         }
         cursor.close();
@@ -465,7 +469,9 @@ public class DBAccess implements AMDBContract {
         String[] strings = str.split(ARRAY_SEPARATOR);
         ArrayList<String> list = new ArrayList<>(strings.length);
         for(String string: strings) {
-            list.add(string);
+            if(string.trim().length() > 0) {
+                list.add(string);
+            }
         }
         return list;
     }
@@ -502,7 +508,6 @@ public class DBAccess implements AMDBContract {
             cv.put("displayValue", sd.getDisplayValue());
             database.insertWithOnConflict(CurrentDataTable.TABLE_NAME, null, cv,
                 SQLiteDatabase.CONFLICT_REPLACE);
-            Log.d(sd.getDisplayName(), "from DBAccess" + sd.getDisplayValue());
         }
     }
 
@@ -554,6 +559,7 @@ public class DBAccess implements AMDBContract {
             cursor.moveToFirst();
             name = cursor.getString(cursor.getColumnIndex("name"));
         }
+        cursor.close();
         return name;
     }
 }

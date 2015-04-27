@@ -160,26 +160,7 @@ public class BluetoothActivity extends ActionBarActivity {
                     access.setBluetoothDeviceName(bluetoothDevice.getName());
                     //Log.d("bluetoothName", bluetoothDevice.getName());
 
-                    Toast.makeText(getApplicationContext(), bluetoothDevice.getName() + " paired.", Toast.LENGTH_SHORT).show();
-
-
-
-
-                    /*
-                    may not need to open the connectino at this time
-
-                    //connect the socket if it is null
-                    if (bluetoothSocket == null){
-                        connect(bluetoothDevice);
-                    }//end if statement
-
-                    //else disconnect the socket
-                    else{
-                        disconnect(bluetoothSocket);
-                    }//end else statement
-                    */
-
-                }//end onItemClick method
+                    Toast.makeText(getApplicationContext(), bluetoothDevice.getName() + " connected.", Toast.LENGTH_SHORT).show();}//end onItemClick method
             });
 
             //create a new clickable list that displays detected devices

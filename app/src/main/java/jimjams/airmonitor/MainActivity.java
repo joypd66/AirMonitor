@@ -23,11 +23,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.Timer;
 import java.util.UUID;
 
 import jimjams.airmonitor.database.DBAccess;
 import jimjams.airmonitor.sensordata.SensorData;
 import jimjams.airmonitor.sensordata.SensorDataGenerator;
+import jimjams.airmonitor.sensordata.SoundMeter;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -71,6 +73,11 @@ public class MainActivity extends ActionBarActivity {
     volatile boolean stopWorker;
 
     /**
+     * SOUND METER JPM
+     */
+    SoundMeter sound = new SoundMeter();
+
+    /**
      * INSTANTIATE TextView used for testing JPM
      */
     TextView feedbackText;
@@ -85,11 +92,18 @@ public class MainActivity extends ActionBarActivity {
      */
     SensorDataGenerator generator;
 
+    /**
+     * private Handler customHandler = new Handler();
+     * @param savedInstanceState
+     */
+
+    private Handler customHandler = new Handler();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         /**
          * ASSIGN feedbackText TextView to object JPM
@@ -99,23 +113,36 @@ public class MainActivity extends ActionBarActivity {
         // SSM Added
         generator = SensorDataGenerator.getInstance();
 
-
-
-        //beginListenForRandomData();
-        // COMMENT out refeshAQInsert as this is occurring in the bluetooth thread now JPM
-        //refreshAQInset();
     }
 
     // ONSTART to start bluetooth every time main activity is returned too JPM
     @Override
     protected void onStart(){
-        /**
-         * TRY START bluetooth thread JPM
-         */
+        super.onStart();
+    }
+
+    @Override
+    protected  void onStop(){
+
+        sound.stop();
+        try {
+            closeBT();
+        }catch(IOException|NullPointerException e){
+            //
+            feedbackText.setText("Cannot close bt in onStop(): " + e);
+        }
+
+        super.onStop();
+    }
+
+    @Override
+    protected void onResume(){
+        sound.start();
+
         if(access.getBluetoothDeviceName() == null){
             feedbackText.setText("No Bluetooth device in memory.");
         }else {
-
+            // TRY to start bt
             try {
                 findBT();
                 openBT();
@@ -123,29 +150,10 @@ public class MainActivity extends ActionBarActivity {
             // CATCH and print IOException JPM
             catch (IOException | NullPointerException ex) {
                 // Removed feedback text on error
-                feedbackText.setText("Error in onStart: " + ex);
-            }
-        }
 
-        super.onStart();
-    }
-
-    @Override
-    protected void onResume(){
-        if(access.getBluetoothDeviceName() == null){
-            feedbackText.setText("No Bluetooth device in memory.");
-        }else {
-            /*
-            try {
-                //findBT();
-                //openBT();
-            }
-            // CATCH and print IOException JPM
-            catch (IOException | NullPointerException ex) {
-                // Removed feedback text on error
                 feedbackText.setText("Error in onResume: " + ex);
             }
-            */
+
         }
 
         super.onResume();
@@ -177,9 +185,6 @@ public class MainActivity extends ActionBarActivity {
         // Get updated data
         // ADDED sensor data to getData method JPM
         ArrayList<SensorData> data = generator.getData();
-        // Save sensor data
-        //access.updateCurrentData(data);
-        Log.v(className, "data from db" + access.toString(DBAccess.CurrentDataTable.TABLE_NAME));
 
         // Create and populate a table
         TableLayout aqi = (TableLayout)findViewById(R.id.mainScreen_airQualityInset);
@@ -226,12 +231,15 @@ public class MainActivity extends ActionBarActivity {
      * @param emaBtn The EMA button on the main screen
      */
     public void on_MainScreen_EMA_button_Click(View emaBtn) {
+        /*
+        sound.stop();
         try {
             closeBT();
         }catch(IOException|NullPointerException e){
             //
-            feedbackText.setText("cannot close bt EMA button pressed" + e);
+            feedbackText.setText("Cannot close bt EMA button pressed" + e);
         }
+        */
         Intent intent = new Intent(this, EMAActivity.class);
         startActivity(intent);
     }
@@ -241,12 +249,15 @@ public class MainActivity extends ActionBarActivity {
      * @param histBtn The history button on the main screen
      */
     public void on_MainScreen_hist_button_Click(View histBtn) {
+        /*
+        sound.stop();
         try {
             closeBT();
         }catch(IOException|NullPointerException e){
             //
-            feedbackText.setText("cannot close bt HIST button pressed" + e);
+            feedbackText.setText("Cannot close bt HIST button pressed" + e);
         }
+        */
       Intent intent = new Intent(this, HistoryActivity.class);
       startActivity(intent);
     }
@@ -256,12 +267,15 @@ public class MainActivity extends ActionBarActivity {
      * @param blueBtn The history button on the main screen
      */
     public void on_MainScreen_Bluetooth_button_Click(View blueBtn) {
+        /*
+        sound.stop();
         try {
             closeBT();
         }catch(IOException|NullPointerException e){
             //
-            feedbackText.setText("cannot close bt BT button pressed" + e);
+            feedbackText.setText("Cannot close bt BT button pressed" + e);
         }
+        */
         Intent intent = new Intent(this, BluetoothActivity.class);
         startActivity(intent);
     }
@@ -364,28 +378,25 @@ public class MainActivity extends ActionBarActivity {
             public void run()
             {
                 // WHILE bluetooth thread running
-                while(!Thread.currentThread().isInterrupted() && !stopWorker)
-                {
+
+                while (!Thread.currentThread().isInterrupted() && !stopWorker) {
                     // TRY to get data
-                    try
-                    {
+                    try {
                         // GET the amount of bytes available on input stream buffer
                         int bytesAvailable = mmInputStream.available();
+
                         // IF there are bytes available
-                        if(bytesAvailable > 0)
-                        {
+                        if (bytesAvailable > 0) {
                             // CREATE array of bytes in packet
                             byte[] packetBytes = new byte[bytesAvailable];
                             // GET bytes
                             mmInputStream.read(packetBytes);
                             // FOR every byte
-                            for(int i=0;i<bytesAvailable;i++)
-                            {
+                            for (int i = 0; i < bytesAvailable; i++) {
                                 // SET b = this byte from array
                                 byte b = packetBytes[i];
                                 // IF b is a delimiter
-                                if(b == delimiter)
-                                {
+                                if (b == delimiter) {
                                     // SET encodedBytes EQUAL to number of bytes already read
                                     byte[] encodedBytes = new byte[readBufferPosition];
                                     // MAKE new array less what's already been read
@@ -393,40 +404,90 @@ public class MainActivity extends ActionBarActivity {
                                     final String data = new String(encodedBytes, "US-ASCII");
                                     readBufferPosition = 0;
 
-                                    handler.post(new Runnable()
-                                    {
-                                        public void run()
-                                        {
+                                    handler.post(new Runnable() {
+                                        public void run() {
                                             access.updateCurrentData(generator.getData(data));
+                                            sound.getAmplitude();
                                             refreshAQInset();
-                                        }
+                                            }
                                     });
-                                }
-                                else
-                                {
+
+                                } else {
                                     readBuffer[readBufferPosition++] = b;
                                 }
                             }
                         }
-                    }
-                    catch (IOException ex)
-                    {
+                    } catch (IOException ex) {
                         stopWorker = true;
                     }
                 }
+
             }
         });
 
         workerThread.start();
     }
 
+    /**
+     * BEGINLISTENINGFORDATA
+     * Thread to get updates from AirCasting Device
+     * UPDATES values on screen using GenerateSensorData
+     */
+    void beginListenForDataNoBT()
+    {
+        // INSTANTIATE handler
+        // handler has the scope to communicate between this class and Main Activity
+        final Handler handler = new Handler();
+        //This is the ASCII code for a newline character, which is used in Arduino code
+        //final byte delimiter = 10;
+
+        stopWorker = false;
+        //readBufferPosition = 0;
+        //readBuffer = new byte[1024];
+        // DELIMITTOR for string balues - unused in this class, but used in GenerateSensor Data JPM
+        //final String minorDelims = ";";
+
+        workerThread = new Thread(new Runnable()
+        {
+            public void run()
+            {
+                while (!Thread.currentThread().isInterrupted() && !stopWorker) {
+                    // TRY to get data
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            // Do something after 5s = 5000ms
+                            //sound.getAmplitude();
+                            refreshAQInset();
+                        }
+                    }, 5000);
+                }
+            }
+
+        });
+
+        workerThread.start();
+
+        
+
+    }
+
+
+
     void closeBT() throws IOException
     {
+        // SET stopworker to stop the beginListeningForData thread
         stopWorker = true;
+        // CLOSE the output stream
         mmOutputStream.close();
+        // CLOSE the input stream
         mmInputStream.close();
+        // CLOSE the socket...
         mmSocket.close();
         //myLabel.setText("Bluetooth Closed");
     }
+
+
 
 }
