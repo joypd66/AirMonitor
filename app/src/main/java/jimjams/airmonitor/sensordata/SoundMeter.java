@@ -19,14 +19,36 @@ package jimjams.airmonitor.sensordata;
 
 
 import android.media.MediaRecorder;
-
+import android.os.Environment;
 import java.io.IOException;
+import android.util.Log;
+
+import jimjams.airmonitor.database.DBAccess;
+
 
 public class SoundMeter {
+
+    /**
+     * Database access
+     */
+    private DBAccess access = DBAccess.getDBAccess();
+    /**
+     * Reference to the SensorGenerator used to get sensor data
+     */
+    SensorDataGenerator generator = SensorDataGenerator.getInstance();
+    String data;
+
     static final private double EMA_FILTER = 0.6;
 
     private MediaRecorder mRecorder = null;
     private double mEMA = 0.0;
+
+    private static String mFileName = null;
+
+    public SoundMeter() {
+        mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
+        mFileName += "/audiorecordtest.3gp";
+    }
 
     public void start() {
         if (mRecorder == null) {
@@ -34,11 +56,13 @@ public class SoundMeter {
             mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
             mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
             mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-            mRecorder.setOutputFile("/dev/null");
+            mRecorder.setOutputFile(mFileName);
             try {
                 mRecorder.prepare();
+                Log.d("Start Audio errror: ", "NO error");
             }catch(IOException e){
                 //
+                Log.d("Start Audio errror: ", e.toString());
             }
             mRecorder.start();
             mEMA = 0.0;
@@ -54,12 +78,15 @@ public class SoundMeter {
         }
     }
 
-    public double getAmplitude() {
-        if (mRecorder != null)
-            return  (mRecorder.getMaxAmplitude()/2700.0);
-        else
+    public int getAmplitude() {
+        if (mRecorder != null){
+            // PREPARE sound data for database entry [DESCRIPTION:VALUE:UNITS;]
+            data  = "SoundLevel:" + Integer.toString(mRecorder.getMaxAmplitude()) + ":DB;";
+            access.updateCurrentData(generator.getData(data));
+            return  (mRecorder.getMaxAmplitude());
+        }else {
             return 0;
-
+        }
     }
 
     public double getAmplitudeEMA() {
