@@ -213,18 +213,16 @@ public class HistoryActivity extends ActionBarActivity {
         // Create a LinearLayout for each category under Snapshot
 
         // Layout for location
-        LinearLayout locationLayout = getLocationLayout(snapshotLayout, listener,
-                snapshot.getLocation());
+        setLocationLayout(snapshotLayout, listener, snapshot.getLocation());
 
         // Layout for sensor data
-        LinearLayout sensorLayout = getSensorLayout(snapshotLayout, listener, snapshot.getData());
+        setSensorLayout(snapshotLayout, listener, snapshot.getData());
 
         // Layout for EMA
-        LinearLayout emaLayout = getEmaLayout(snapshotLayout, listener, snapshot.getEma());
+        setEmaLayout(snapshotLayout, listener, snapshot.getEma());
 
         // Layout for existing conditions
-        LinearLayout conditionLayout = getConditionLayout(snapshotLayout, listener,
-                snapshot.getConditions());
+        setConditionLayout(snapshotLayout, listener, snapshot.getConditions());
 
         individualSnapshotLabel.setOnClickListener(listener);
         return snapshotLayout;
@@ -237,7 +235,7 @@ public class HistoryActivity extends ActionBarActivity {
      * @param location The location
      * @return LinearLayout for a snapshot's location data
      */
-    private LinearLayout getLocationLayout(LinearLayout snapshotLayout,
+    private LinearLayout setLocationLayout(LinearLayout snapshotLayout,
             View.OnClickListener listener, Location location) {
         LinearLayout locationLayout = new LinearLayout(this);
         locationLayout.setOrientation(LinearLayout.VERTICAL);
@@ -299,7 +297,7 @@ public class HistoryActivity extends ActionBarActivity {
      * @param sensorData Sensor data
      * @return LinearLayout for a snapshot's sensor data
      */
-    private LinearLayout getSensorLayout(LinearLayout snapshotLayout, View.OnClickListener listener,
+    private LinearLayout setSensorLayout(LinearLayout snapshotLayout, View.OnClickListener listener,
             ArrayList<SensorData> sensorData) {
         LinearLayout sensorLayout = new LinearLayout(this);
         sensorLayout.setOrientation(LinearLayout.VERTICAL);
@@ -360,7 +358,7 @@ public class HistoryActivity extends ActionBarActivity {
      * @param ema Ecological Momentary Assessment
      * @return LinearLayout for a snapshot's EMA data
      */
-    private LinearLayout getEmaLayout(LinearLayout snapshotLayout, View.OnClickListener listener,
+    private LinearLayout setEmaLayout(LinearLayout snapshotLayout, View.OnClickListener listener,
             EcologicalMomentaryAssessment ema) {
         LinearLayout emaLayout = new LinearLayout(this);
         emaLayout.setOrientation(LinearLayout.VERTICAL);
@@ -434,7 +432,7 @@ public class HistoryActivity extends ActionBarActivity {
      * @param conditions Snapshot's existing conditions
      * @return LinearLayout for a snapshot's existing conditions
      */
-    private LinearLayout getConditionLayout(LinearLayout snapshotLayout,
+    private LinearLayout setConditionLayout(LinearLayout snapshotLayout,
             View.OnClickListener listener, ArrayList<String> conditions) {
         LinearLayout conditionLayout = new LinearLayout(this);
         conditionLayout.setOrientation(LinearLayout.VERTICAL);
