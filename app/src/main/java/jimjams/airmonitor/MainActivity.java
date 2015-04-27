@@ -262,6 +262,11 @@ public class MainActivity extends ActionBarActivity {
       startActivity(intent);
     }
 
+    public void on_MainScreen_map_button_Click(View mapBtn) {
+        Intent intent = new Intent(this, MapActivity.class);
+        startActivity(intent);
+    }
+
     /**
      * Invoked when the history button on the main screen is clicked.
      * @param blueBtn The history button on the main screen
