@@ -1,7 +1,6 @@
 package jimjams.airmonitor.sensordata;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Generates random sensor sensor data to test app. This class uses the singleton pattern and a
@@ -10,14 +9,19 @@ import java.util.List;
  */
 public class SensorDataGenerator {
 
-   /**
+    /**
+     * Used to identify source class for log
+     */
+    private String className = getClass().getSimpleName();
+
+    /**
     * The current instance of <code>SensorDataGenerator</code>
     */
    private static SensorDataGenerator instance = null;
 
    /**
     * Chance for a given DataCategory to be used returned by {@link #getData()}.
-    * This value can be adjusted to allow differnt arrangements of test data.
+    * This value can be adjusted to allow different arrangements of test data.
     * Value should be from 0 - 1.
     */
    private final static double RETURN_CHANCE = 1;
@@ -54,86 +58,123 @@ public class SensorDataGenerator {
     * is no data are not returned.
     * @return Sensor data
     */
-   public List<SensorData> getData() {
-      List<SensorData> data = new ArrayList<>();
-      for(DataCategory dataCat: dataCats) {
-         if(rand(0, 1) < RETURN_CHANCE) {
-            data.add(new SensorData(dataCat.displayName, dataCat.shortName,
-                  rand(dataCat.min, dataCat.max), dataCat.decimalPlaces,
-                  dataCat.unit));
-         }
+   public ArrayList<SensorData> getData(String sensorData) {
+      ArrayList<SensorData> data = new ArrayList<>();
+      // PARSE string with ';' as the delimiter between different sensors (set on Arduino code) JPM
+      String[] tokens = sensorData.split(";");
+
+      // ATTEMPT to get sound level
+      // NOT WORKING! JPM
+        /*
+        sMeter.start();
+        data.add(new SensorData("Sound Level", "Sound Level", sMeter.getAmplitude(), "DB"));
+        sMeter.stop();
+        */
+
+      //for(DataCategory dataCat: dataCats) {
+      for(String value: tokens){
+         // FURTHER parse tokens in to bits using ':' delimiter breaking single sensor
+         // data in to name, value and units (array 0, 1 and 2 respectively [set in Arduino code])
+         String[] bits = value.split(":");
+         // ADD data to List by INSTANTIATING SensorData object
+          // Log.d(className, Arrays.toString(bits));
+          try {
+              data.add(new SensorData(bits[0], bits[0], Double.parseDouble(bits[1]), 0, bits[2]));
+          }
+          catch(ArrayIndexOutOfBoundsException aioobe) {
+              // Do nothing
+          }
       }
+      // RETURN ArrayList containing sensor data
       return data;
+
    }
+
+    /**
+     * Returns sensor data as an array of <code>SensorData</code> objects. Categories for which
+     * there is no data are not returned.
+     * @return Sensor data
+     */
+    public ArrayList<SensorData> getData() {
+        ArrayList<SensorData> data = new ArrayList<>();
+        for(DataCategory dataCat : dataCats) {
+            if(rand(0, 1) < RETURN_CHANCE) {
+                data.add(new SensorData(dataCat.displayName, dataCat.shortName,
+                        rand(dataCat.min, dataCat.max), dataCat.decimalPlaces,
+                        dataCat.unit));
+            }
+        }
+        return data;
+    }
 
    /**
-    * Generates a random double in the specified range.
-    * @param min Minimum value
-    * @param max Maximum value
-    * @return random double in the range (min, max)
-    */
-   private double rand(double min, double max) {
-      double rand = Math.random();
-      rand *= (max - min);
-      rand += min;
-      return rand;
-   }
+     * Generates a random double in the specified range.
+     * @param min Minimum value
+     * @param max Maximum value
+     * @return random double in the range (min, max)
+     */
+    private double rand(double min, double max) {
+        double rand = Math.random();
+        rand *= (max - min);
+        rand += min;
+        return rand;
+    }
 
-   /**
-    * Groups data for a single type of reading. Used to construct <code>SensorData</code>. Instance
-    * variable are package-private to allow
-    * access from <code>SensorDataGenerator</code>.
-    */
-   private static class DataCategory {
+    /**
+     * Groups data for a single type of reading. Used to construct <code>SensorData</code>. Instance
+     * variable are package-private to allow
+     * access from <code>SensorDataGenerator</code>.
+     */
+    private static class DataCategory {
 
-      /**
-       * Display name for the data
-       */
-      String displayName;
+        /**
+         * Display name for the data
+         */
+        String displayName;
 
-      /**
-       * Short name for the data
-       */
-      String shortName;
+        /**
+         * Short name for the data
+         */
+        String shortName;
 
-      /**
-       * Minimum value
-       */
-      double min;
+        /**
+         * Minimum value
+         */
+        double min;
 
-      /**
-       * Maximum value
-       */
-      double max;
+        /**
+         * Maximum value
+         */
+        double max;
 
-      /**
-       * Number of decimal places to be displayed
-       */
-      int decimalPlaces;
+        /**
+         * Number of decimal places to be displayed
+         */
+        int decimalPlaces;
 
-      /**
-       * Unit of measure
-       */
-      String unit;
+        /**
+         * Unit of measure
+         */
+        String unit;
 
-      /**
-       * Constructor.
-       *
-       * @param displayName   Display name for the data
-       * @param shortName     Short name for the data
-       * @param min           Minimum value
-       * @param max           Maximum value
-       * @param decimalPlaces Number of decimal places to be displayed
-       * @param unit          Unit of measure
-       */
-      DataCategory(String displayName, String shortName, double min, double max, int decimalPlaces,
-                   String unit) {
-         this.displayName = displayName;
-         this.shortName = shortName;
-         this.min = min;
-         this.max = max;
-         this.decimalPlaces = decimalPlaces;
-         this.unit = unit;
-      }
-   }
+        /**
+         * Constructor.
+         *
+         * @param displayName   Display name for the data
+         * @param shortName     Short name for the data
+         * @param min           Minimum value
+         * @param max           Maximum value
+         * @param decimalPlaces Number of decimal places to be displayed
+         * @param unit          Unit of measure
+         */
+        DataCategory(String displayName, String shortName, double min, double max,
+                int decimalPlaces, String unit) {
+            this.displayName = displayName;
+            this.shortName = shortName;
+            this.min = min;
+            this.max = max;
+            this.decimalPlaces = decimalPlaces;
+            this.unit = unit;
+        }
+    }
 }

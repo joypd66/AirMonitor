@@ -1,6 +1,6 @@
 package jimjams.airmonitor.datastructure;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * An Ecological Momentary Assessment, representing the user's personal assessment of the
@@ -26,7 +26,7 @@ public class EcologicalMomentaryAssessment {
    /**
     * The user's report of who s/he is with at the time of the Snapshot
     */
-   private List<String> companions;
+   private ArrayList<String> companions;
 
    /**
     * The user's subjective report of the current air quality, on a scale of 1 to 10
@@ -69,7 +69,7 @@ public class EcologicalMomentaryAssessment {
     * @param barrier          The user's report of what prevented him/her from relocating.
     */
    public EcologicalMomentaryAssessment(boolean indoors, String reportedLocation, String activity,
-         List<String> companions, int airQuality, int belief, int intention, boolean behavior,
+         ArrayList<String> companions, int airQuality, int belief, int intention, boolean behavior,
          String barrier) {
       this.indoors = indoors;
       this.reportedLocation = reportedLocation;
@@ -110,7 +110,7 @@ public class EcologicalMomentaryAssessment {
     * Returns the user's report of who s/he is with at the time of the Snapshot.
     * @return The user's report of who s/he is with at the time of the Snapshot
     */
-   public List<String> getCompanions() {
+   public ArrayList<String> getCompanions() {
       return companions;
    }
 
