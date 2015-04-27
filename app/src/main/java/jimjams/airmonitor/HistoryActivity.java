@@ -92,7 +92,7 @@ public class HistoryActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+        // noinspection SimplifiableIfStatement
         if(id == R.id.action_settings) {
             return true;
         }
@@ -154,9 +154,9 @@ public class HistoryActivity extends ActionBarActivity {
              * @param v The View that was clicked
              */
             public void onClick(View v) {
-                Boolean tag = (Boolean) v.getTag();
-                LinearLayout parent = (LinearLayout) v.getParent();
-                ArrayList<View> kids = (ArrayList<View>) parent.getTag();
+                Boolean tag = (Boolean)v.getTag();
+                LinearLayout parent = (LinearLayout)v.getParent();
+                ArrayList<View> kids = (ArrayList<View>)parent.getTag();
                 if(tag) {
                     // Snapshot is expanded; must be collapsed
                     for(View kid: kids) {
@@ -166,7 +166,6 @@ public class HistoryActivity extends ActionBarActivity {
                 else {
                     // Snapshot is collapsed; must be expanded
                     for(View kid: kids) {
-                        // Log.d(className, kid.toString());
                         parent.addView(kid);
                     }
                 }
@@ -201,7 +200,7 @@ public class HistoryActivity extends ActionBarActivity {
         // Tag is a list of expandable/collapsible child component
         snapshotLayout.setTag(new ArrayList<View>());
 
-        // Add date/time as label This TextView will also serve as an expand button
+        // Add date/time as label. This TextView will also serve as an expand button
         Date timestamp = snapshot.getTimestamp();
         TextView individualSnapshotLabel = new TextView(this);
         individualSnapshotLabel.setText(formatDate(timestamp));
@@ -285,8 +284,6 @@ public class HistoryActivity extends ActionBarActivity {
         }
         else {
             // Populate the table
-            // Log.d(className, "Adding lat=" + location.getLatitude() + " long=" +
-                    // location.getLongitude());
             locationTable.addView(makeTableRow("latitude",
                     decFormat.format(location.getLatitude())));
             locationTable.addView(makeTableRow("longitude",
@@ -316,7 +313,7 @@ public class HistoryActivity extends ActionBarActivity {
         sensorLayout.setTag(new ArrayList<View>());
 
         // Add this layout to the parent's tag
-        ((ArrayList<View>) snapshotLayout.getTag()).add(sensorLayout);
+        ((ArrayList<View>)snapshotLayout.getTag()).add(sensorLayout);
 
         // Label for the sensor data
         TextView sensorLabel = new TextView(this);
@@ -337,7 +334,7 @@ public class HistoryActivity extends ActionBarActivity {
                 sensorTable.getPaddingBottom());
 
         // Add this layout to the parent's tag
-        ((ArrayList<View>) sensorLayout.getTag()).add(sensorTable);
+        ((ArrayList<View>)sensorLayout.getTag()).add(sensorTable);
 
         // Populate the table
         if(sensorData.size() == 0) {
@@ -355,7 +352,6 @@ public class HistoryActivity extends ActionBarActivity {
         }
         return sensorLayout;
     }
-
 
     /**
      * Creates a LinearLayout for a snapshot's EMA data.
@@ -378,7 +374,7 @@ public class HistoryActivity extends ActionBarActivity {
         emaLayout.setTag(new ArrayList<View>());
 
         // Add this layout to the parent's tag
-        ((ArrayList<View>) snapshotLayout.getTag()).add(emaLayout);
+        ((ArrayList<View>)snapshotLayout.getTag()).add(emaLayout);
 
         // Label for the EMA
         TextView emaLabel = new TextView(this);
@@ -398,7 +394,7 @@ public class HistoryActivity extends ActionBarActivity {
                 emaTable.getPaddingRight(), emaTable.getPaddingBottom());
 
         // Add this layout to the parent's tag
-        ((ArrayList<View>) emaLayout.getTag()).add(emaTable);
+        ((ArrayList<View>)emaLayout.getTag()).add(emaTable);
 
         // Populate the table
         emaTable.addView(makeTableRow(getResources().getString(
@@ -418,7 +414,7 @@ public class HistoryActivity extends ActionBarActivity {
         emaTable.addView(makeTableRow(getResources().getString(
                 R.string.history_screen_ema_companion_label), companionString));
         emaTable.addView(makeTableRow(getResources().getString(
-                        R.string.history_screen_ema_airQuality_label),
+                R.string.history_screen_ema_airQuality_label),
                 String.valueOf(ema.getAirQuality())));
         emaTable.addView(makeTableRow(getResources().getString(
                 R.string.history_screen_ema_belief_label), String.valueOf(ema.getBelief())));
