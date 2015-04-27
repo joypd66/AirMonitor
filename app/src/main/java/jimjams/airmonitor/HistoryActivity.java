@@ -198,7 +198,8 @@ public class HistoryActivity extends ActionBarActivity {
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         // Tag is a list of expandable/collapsible child component
-        snapshotLayout.setTag(new ArrayList<View>());
+        ArrayList<View> snapshotTag = new ArrayList<>();
+        snapshotLayout.setTag(snapshotTag);
 
         // Add date/time as label. This TextView will also serve as an expand button
         Date timestamp = snapshot.getTimestamp();
@@ -213,16 +214,20 @@ public class HistoryActivity extends ActionBarActivity {
         // Create a LinearLayout for each category under Snapshot
 
         // Layout for location
-        setLocationLayout(snapshotLayout, listener, snapshot.getLocation());
+        LinearLayout locationLayout = getLocationLayout(listener, snapshot.getLocation());
+        snapshotTag.add(locationLayout);
 
         // Layout for sensor data
-        setSensorLayout(snapshotLayout, listener, snapshot.getData());
+        LinearLayout sensorLayout  = getSensorLayout(listener, snapshot.getData());
+        snapshotTag.add(sensorLayout);
 
         // Layout for EMA
-        setEmaLayout(snapshotLayout, listener, snapshot.getEma());
+        LinearLayout emaLayout = getEmaLayout(listener, snapshot.getEma());
+        snapshotTag.add(emaLayout);
 
         // Layout for existing conditions
-        setConditionLayout(snapshotLayout, listener, snapshot.getConditions());
+        LinearLayout conditionLayout = getConditionLayout(listener, snapshot.getConditions());
+        snapshotTag.add(conditionLayout);
 
         individualSnapshotLabel.setOnClickListener(listener);
         return snapshotLayout;
@@ -230,13 +235,11 @@ public class HistoryActivity extends ActionBarActivity {
 
     /**
      * Creates a LinearLayout for a snapshot's location data.
-     * @param snapshotLayout The parent layout
      * @param listener The click listener used to expand/collapse data
      * @param location The location
      * @return LinearLayout for a snapshot's location data
      */
-    private LinearLayout setLocationLayout(LinearLayout snapshotLayout,
-            View.OnClickListener listener, Location location) {
+    private LinearLayout getLocationLayout(View.OnClickListener listener, Location location) {
         LinearLayout locationLayout = new LinearLayout(this);
         locationLayout.setOrientation(LinearLayout.VERTICAL);
 
@@ -247,9 +250,6 @@ public class HistoryActivity extends ActionBarActivity {
 
         // Tag is a list of expandable/collapsible child components
         locationLayout.setTag(new ArrayList<View>());
-
-        // Add this layout to the parent's tag
-        ((ArrayList<View>)snapshotLayout.getTag()).add(locationLayout);
 
         // Label for the location data
         TextView locationLabel = new TextView(this);
@@ -292,12 +292,11 @@ public class HistoryActivity extends ActionBarActivity {
 
     /**
      * Creates a LinearLayout for a snapshot's sensor data.
-     * @param snapshotLayout The parent layout
      * @param listener The click listener used to expand/collapse data
      * @param sensorData Sensor data
      * @return LinearLayout for a snapshot's sensor data
      */
-    private LinearLayout setSensorLayout(LinearLayout snapshotLayout, View.OnClickListener listener,
+    private LinearLayout getSensorLayout(View.OnClickListener listener,
             ArrayList<SensorData> sensorData) {
         LinearLayout sensorLayout = new LinearLayout(this);
         sensorLayout.setOrientation(LinearLayout.VERTICAL);
@@ -309,9 +308,6 @@ public class HistoryActivity extends ActionBarActivity {
 
         // Tag is a list of expandable/collapsible child components
         sensorLayout.setTag(new ArrayList<View>());
-
-        // Add this layout to the parent's tag
-        ((ArrayList<View>)snapshotLayout.getTag()).add(sensorLayout);
 
         // Label for the sensor data
         TextView sensorLabel = new TextView(this);
@@ -353,26 +349,21 @@ public class HistoryActivity extends ActionBarActivity {
 
     /**
      * Creates a LinearLayout for a snapshot's EMA data.
-     * @param snapshotLayout The parent layout
      * @param listener The click listener used to expand/collapse data
      * @param ema Ecological Momentary Assessment
      * @return LinearLayout for a snapshot's EMA data
      */
-    private LinearLayout setEmaLayout(LinearLayout snapshotLayout, View.OnClickListener listener,
+    private LinearLayout getEmaLayout(View.OnClickListener listener,
             EcologicalMomentaryAssessment ema) {
         LinearLayout emaLayout = new LinearLayout(this);
         emaLayout.setOrientation(LinearLayout.VERTICAL);
 
         // Add padding to indent
-        emaLayout.setPadding(snapshotLayout.getPaddingLeft() + INDENT,
-                snapshotLayout.getPaddingTop(), snapshotLayout.getPaddingRight(),
-                snapshotLayout.getPaddingBottom());
+        emaLayout.setPadding(emaLayout.getPaddingLeft() + INDENT, emaLayout.getPaddingTop(),
+                emaLayout.getPaddingRight(), emaLayout.getPaddingBottom());
 
         // Tag is a list of expandable/collapsible child components
         emaLayout.setTag(new ArrayList<View>());
-
-        // Add this layout to the parent's tag
-        ((ArrayList<View>)snapshotLayout.getTag()).add(emaLayout);
 
         // Label for the EMA
         TextView emaLabel = new TextView(this);
@@ -427,26 +418,22 @@ public class HistoryActivity extends ActionBarActivity {
 
     /**
      * Creates a LinearLayout for a snapshot's existing conditions.
-     * @param snapshotLayout The parent layout
      * @param listener The click listener used to expand/collapse data
      * @param conditions Snapshot's existing conditions
      * @return LinearLayout for a snapshot's existing conditions
      */
-    private LinearLayout setConditionLayout(LinearLayout snapshotLayout,
-            View.OnClickListener listener, ArrayList<String> conditions) {
+    private LinearLayout getConditionLayout( View.OnClickListener listener,
+            ArrayList<String> conditions) {
         LinearLayout conditionLayout = new LinearLayout(this);
         conditionLayout.setOrientation(LinearLayout.VERTICAL);
 
         // Add padding to indent
-        conditionLayout.setPadding(snapshotLayout.getPaddingLeft() + INDENT,
-                snapshotLayout.getPaddingTop(), snapshotLayout.getPaddingRight(),
-                snapshotLayout.getPaddingBottom());
+        conditionLayout.setPadding(conditionLayout.getPaddingLeft() + INDENT,
+                conditionLayout.getPaddingTop(), conditionLayout.getPaddingRight(),
+                conditionLayout.getPaddingBottom());
 
         // Tag is a list of expandable/collapsible child components
         conditionLayout.setTag(new ArrayList<View>());
-
-        // Add this layout to the parent's tag
-        ((ArrayList<View>)snapshotLayout.getTag()).add(conditionLayout);
 
         // Label for the existing conditions
         TextView conditionLabel = new TextView(this);
