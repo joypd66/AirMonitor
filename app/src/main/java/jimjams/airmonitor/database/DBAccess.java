@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteFullException;
 import android.location.Location;
+import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -308,6 +309,7 @@ public class DBAccess implements AMDBContract {
      * @return All Snapshots in the database
      */
     public ArrayList<Snapshot> getSnapshots(long userId) {
+        Log.d(className, toString(SnapshotTable.TABLE_NAME));
         Cursor cursor = database.rawQuery("SELECT * FROM " + SnapshotTable.TABLE_NAME +
                 " WHERE userId = " + userId, null);
         ArrayList<Snapshot> snaps = new ArrayList<>(cursor.getCount());
