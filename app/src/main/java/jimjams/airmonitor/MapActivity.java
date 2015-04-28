@@ -47,7 +47,6 @@ public class MapActivity extends ActionBarActivity
     /*
         Local variables
      */
-    private MapFragment mMapFragment;                   // The MapFragment object for the window's map
     private GoogleMap mainMap;                          // The GoogleMap object itself
     private DBAccess dbAccess = DBAccess.getDBAccess(); // DB Access
     private Hashtable<Marker, Snapshot> markerTable;            // The map used for marker related stuff
@@ -104,19 +103,16 @@ public class MapActivity extends ActionBarActivity
 
     // Prepares the map for viewing upon creating the view
     private void prepareMap() {
-        System.out.println("prepareMap()");
+        Log.v(this.getLocalClassName(), "prepareMap()");
         long profileID = dbAccess.getProfileId();
 
         // A list of the snapshots, for getting the locations
         List<Snapshot> snapshots = dbAccess.getSnapshots(profileID);
 
-        // Now we just need to get ourselves a list of the locations
-        ArrayList<Location> locations = new ArrayList<>();
-
         if (this.mainMap == null) {
             // Something went seriously wrong. This should never be called
             // But I'm paranoid so why not add it...
-            System.out.println("The mainMap was null.. we should just quit and get it together...");
+            Log.wtf(this.getLocalClassName(), "The mainMap was null.. we should just quit and get it together...", new Exception());
             System.exit(34);
         }
 
@@ -202,7 +198,7 @@ public class MapActivity extends ActionBarActivity
         this.mainMap.setInfoWindowAdapter(this);
 
         // Create the Hashtable for the markers
-        this.markerTable = new Hashtable<Marker, Snapshot>();
+        this.markerTable = new Hashtable<>();
 
 
         // Prepare the map using the internal prepareMap() function
@@ -245,7 +241,7 @@ public class MapActivity extends ActionBarActivity
         EcologicalMomentaryAssessment wEMA = workingSnapshot.getEma();
 
         if (wEMA.getReportedLocation().length() > 18) {
-            StringBuffer strBuff = new StringBuffer();
+            StringBuilder strBuff = new StringBuilder();
             for (int i = 0; i < 15; i++) {
                 strBuff.append(wEMA.getReportedLocation().charAt(i));
             }
@@ -273,7 +269,6 @@ public class MapActivity extends ActionBarActivity
             if (wData.getShortName().equals("humid")) {
                 // We found the humidity! Get the data and put it in the view.
                 humidityLabel.setText(wData.getDisplayValue());
-                continue;
             }
         }
 
