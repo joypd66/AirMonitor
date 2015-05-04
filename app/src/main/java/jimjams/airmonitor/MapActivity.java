@@ -137,6 +137,13 @@ public class MapActivity extends ActionBarActivity
             MarkerOptions wOptions = new MarkerOptions();
 
             // Set the position of the marker
+
+            if (wLocation == null) {
+                Log.d(this.getLocalClassName(), "There was no location. Continue on to the next.");
+                continue;
+            }
+
+
             wOptions.position(new LatLng(wLocation.getLatitude(), wLocation.getLongitude()));
             Date snapshotDate = wSnapshot.getTimestamp();
 
@@ -176,11 +183,8 @@ public class MapActivity extends ActionBarActivity
             mainMap.moveCamera(cameraUpdate);
         } catch (IllegalStateException e) {
             // No points exist, add no points.
-            Log.d(this.getLocalClassName(), "No points found, catching the exception", e);
+            Log.i(this.getLocalClassName(), "No points found, catching the exception", e);
         }
-
-
-
 
     }
 
