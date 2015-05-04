@@ -137,6 +137,13 @@ public class MapActivity extends ActionBarActivity
             MarkerOptions wOptions = new MarkerOptions();
 
             // Set the position of the marker
+
+            if (wLocation == null) {
+                Log.d(this.getLocalClassName(), "There was no location. Continue on to the next.");
+                continue;
+            }
+
+
             wOptions.position(new LatLng(wLocation.getLatitude(), wLocation.getLongitude()));
             Date snapshotDate = wSnapshot.getTimestamp();
 
