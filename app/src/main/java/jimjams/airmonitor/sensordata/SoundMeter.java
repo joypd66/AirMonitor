@@ -20,8 +20,9 @@ package jimjams.airmonitor.sensordata;
 
 import android.media.MediaRecorder;
 import android.os.Environment;
-import java.io.IOException;
 import android.util.Log;
+
+import java.io.IOException;
 
 import jimjams.airmonitor.database.DBAccess;
 
@@ -83,7 +84,8 @@ public class SoundMeter {
             // PREPARE sound data for database entry [DESCRIPTION:VALUE:UNITS;]
             data  = "SoundLevel:" + Integer.toString(mRecorder.getMaxAmplitude()) + ":DB;";
             access.updateCurrentData(generator.getData(data));
-            return  (mRecorder.getMaxAmplitude());
+            Log.d("tag", data);
+            return 1;
         }else {
             return 0;
         }

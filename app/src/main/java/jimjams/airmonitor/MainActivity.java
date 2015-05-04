@@ -8,7 +8,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +23,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 
 import jimjams.airmonitor.database.DBAccess;
@@ -99,6 +99,15 @@ public class MainActivity extends ActionBarActivity {
 
     private Handler customHandler = new Handler();
 
+    /**
+     * for timer
+     * @param savedInstanceState
+     */
+    Timer timer;
+
+    TimerTask timerTask;
+    private Handler handler = new Handler();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,6 +161,8 @@ public class MainActivity extends ActionBarActivity {
                 // Removed feedback text on error
 
                 feedbackText.setText("Error in onResume: " + ex);
+                access.clearCurrentData();
+                startTimer();
             }
 
         }
@@ -304,8 +315,8 @@ public class MainActivity extends ActionBarActivity {
         if(!mBluetoothAdapter.isEnabled())
         {
             // ATTEMPT to enable bluetooth
-            Intent enableBluetooth = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBluetooth, 0);
+            // Intent enableBluetooth = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            // startActivityForResult(enableBluetooth, 0);
         }
 
         // GET bound devices from bluetoothAdaptor
@@ -470,6 +481,67 @@ public class MainActivity extends ActionBarActivity {
         workerThread.start();
 
         
+
+    }
+
+
+    public void startTimer() {
+
+        //set a new Timer
+
+        timer = new Timer();
+
+        //initialize the TimerTask's job
+
+        initializeTimerTask();
+
+
+
+        //schedule the timer, after the first 5000ms the TimerTask will run every 10000ms
+
+        timer.schedule(timerTask, 0, 1000); //
+
+    }
+
+
+
+    public void stoptimertask(View v) {
+
+        //stop the timer, if it's not already null
+
+        if (timer != null) {
+
+            timer.cancel();
+
+            timer = null;
+
+        }
+
+    }
+
+
+    public void initializeTimerTask() {
+
+        timerTask = new TimerTask() {
+
+            public void run() {
+
+                //use a handler to run a toast that shows the current timestamp
+
+                handler.post(new Runnable() {
+
+                    public void run() {
+                        // SET sound
+                        sound.getAmplitude();
+                        // REFRESH AQInsert
+                        refreshAQInset();
+                    }
+
+                });
+
+            }
+
+        };
 
     }
 
