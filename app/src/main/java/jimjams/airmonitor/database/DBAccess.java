@@ -535,6 +535,13 @@ public class DBAccess implements AMDBContract {
     }
 
     /**
+     * Clears all current data from the database.
+     */
+    public void clearCurrentData() {
+        database.delete(CurrentDataTable.TABLE_NAME, null, null);
+    }
+
+    /**
      * Sets the name of the current Bluetooth device.
      * @param name The name of the current Bluetooth device
      */
