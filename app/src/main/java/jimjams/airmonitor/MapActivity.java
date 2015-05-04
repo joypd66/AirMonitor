@@ -176,11 +176,8 @@ public class MapActivity extends ActionBarActivity
             mainMap.moveCamera(cameraUpdate);
         } catch (IllegalStateException e) {
             // No points exist, add no points.
-            Log.d(this.getLocalClassName(), "No points found, catching the exception", e);
+            Log.i(this.getLocalClassName(), "No points found, catching the exception", e);
         }
-
-
-
 
     }
 
