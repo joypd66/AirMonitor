@@ -20,7 +20,6 @@ package jimjams.airmonitor.sensordata;
 
 import android.media.MediaRecorder;
 import android.os.Environment;
-import android.util.Log;
 
 import java.io.IOException;
 
@@ -36,13 +35,10 @@ public class SoundMeter {
     /**
      * Reference to the SensorGenerator used to get sensor data
      */
-    SensorDataGenerator generator = SensorDataGenerator.getInstance();
-    String data;
-
-    static final private double EMA_FILTER = 0.6;
+    private SensorDataGenerator generator = SensorDataGenerator.getInstance();
+    private String data;
 
     private MediaRecorder mRecorder = null;
-    private double mEMA = 0.0;
 
     private static String mFileName = null;
 
@@ -62,13 +58,9 @@ public class SoundMeter {
             mRecorder.setOutputFile(mFileName);
             try {
                 mRecorder.prepare();
-                Log.d("Start Audio errror: ", "NO error");
             }catch(IOException e){
-                //
-                Log.d("Start Audio errror: ", e.toString());
             }
             mRecorder.start();
-            mEMA = 0.0;
         }
     }
 
@@ -93,17 +85,9 @@ public class SoundMeter {
             }else{
                 access.updateCurrentData(generator.getData("SoundLevel:" + lastSL + ":DB;"));
             }
-            //Log.d("tag", data);
-
             return soundLevel;
         }else {
             return 0;
         }
-    }
-
-    public double getAmplitudeEMA() {
-        double amp = getAmplitude();
-        mEMA = EMA_FILTER * amp + (1.0 - EMA_FILTER) * mEMA;
-        return mEMA;
     }
 }

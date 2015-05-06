@@ -15,9 +15,6 @@ import jimjams.airmonitor.sensordata.SensorData;
  * EcologicalMomentaryAssessment (EMA).
  */
 public class Snapshot {
-
-   private String className = getClass().getSimpleName();
-
    /**
     * The ID of the user to whom this Snapshot belongs
     */
@@ -89,7 +86,6 @@ public class Snapshot {
       this.conditions = conditions;
       this.ema = ema;
    }
-
 
    /**
     * Returns the user ID for this Snapshot.

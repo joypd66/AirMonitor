@@ -1,7 +1,6 @@
 package jimjams.airmonitor.datastructure;
 
 import android.database.sqlite.SQLiteFullException;
-import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -11,12 +10,6 @@ import jimjams.airmonitor.database.DBAccess;
  * User profile.
  */
 public class Profile {
-
-   /**
-    * Used to identify source class for log
-    */
-   private String className = getClass().getSimpleName();
-
    /**
     * The user's ID number. Initially this is set to 0; when the profile is first uploaded to the
     * nonlocal database, a new, unique id is assigned.
@@ -42,16 +35,18 @@ public class Profile {
       try {
          id = access.getProfileId();
          conditions = access.getProfileConditions();
-         // Log.d(className, "Constructor: database accessed.");
       }
       catch(SQLiteFullException sqlfe) {
          id = 0;
          conditions = new ArrayList<>();
-         Log.w(className, "Too many Profiles in database; generating empty Profile.");
       }
       // Log.d(className, toString());
    }
 
+   /**
+    * Gets the current user profile.
+    * @return The current user profile
+    */
    public static Profile getProfile() {
       if(profile == null) {
          profile = new Profile();
@@ -75,20 +70,12 @@ public class Profile {
          }
       }
 
-      if(duplicate) {
-         // Log.d(className, "Failed to add " + condition + " (duplicate).");
-      }
-      else if(empty) {
-         // Log.d(className, "Failed to add " + condition + " (empty).");
-      }
-      else {
+      if(!duplicate && !empty) {
          conditions.add(condition);
-         // Log.d(className, "Adding " + condition + ".");
 
          // Update database
          DBAccess.getDBAccess().updateProfile();
       }
-      // Log.d(className, toString());
    }
 
    /**
@@ -97,13 +84,8 @@ public class Profile {
     */
    public void removeCondition(String condition) {
       if(conditions.remove(condition)) {
-         // Log.d(className, "Removing " + condition + ".");
          DBAccess.getDBAccess().updateProfile();
       }
-      else {
-         // Log.d(className, "Failed to remove " + condition + ".");
-      }
-      // Log.d(className, toString());
    }
 
    /**

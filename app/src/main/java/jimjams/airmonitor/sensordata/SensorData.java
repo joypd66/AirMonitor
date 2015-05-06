@@ -8,7 +8,7 @@ import java.text.DecimalFormat;
 public class SensorData {
 
    /**
-    * <code>DecimalFormat</code>s used to format values for display
+    * DecimalFormats used to format values for display
     */
    private static DecimalFormat[] df = {
       new DecimalFormat("0"),
