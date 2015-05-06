@@ -39,8 +39,8 @@ public interface AMDBContract {
 
     /**
      * <p>Database table containing Profile data. Note that the id column will <b>not</b> be
-     * incremented; it will initially be 0 and may be updated at a later time if server-side data
-     * storage is implemented.</p>
+     *    incremented; it will initially be 0 and may be updated at a later time if server-side
+     *    data storage is implemented.</p>
      * <p>Columns in the table:</p>
      * <dl>
      *     <dt>id</dt>
@@ -271,6 +271,37 @@ public interface AMDBContract {
         public static final String[][] COLUMNS = {
             { "id", "INTEGER PRIMARY KEY" },
             { "name", "TEXT" },
+        };
+    }
+
+    /**
+     * <p>Database used to store the Bluetooth device name.</p>
+     * <p>Columns in the table:</p>
+     * <dl>
+     *     <dt>id</dt>
+     *     <dd>Unique id for the record</dd>
+     *     <dt>name</dt>
+     *     <dd>Name of the device</dd>
+     * </dl>
+     */
+    public static final class CalibrationLevel implements BaseColumns {
+
+        /**
+         * Name of the table
+         */
+        public static final String TABLE_NAME = "calibrationLevel";
+
+        /**
+         * Row ID
+         */
+        public static final long CALIBRATION_LEVEL_ID = 1L;
+
+        /**
+         * Columns in the table
+         */
+        public static final String[][] COLUMNS = {
+            { "id", "INTEGER PRIMARY KEY" },
+            { "value", "REAL" },
         };
     }
 }

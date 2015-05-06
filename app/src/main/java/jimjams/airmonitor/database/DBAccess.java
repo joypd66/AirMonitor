@@ -31,14 +31,14 @@ public class DBAccess implements AMDBContract {
     private SQLiteDatabase database;
 
     /**
-     * Used to identify source class for log
-     */
-    private String className = getClass().getSimpleName();
-
-    /**
      * Used to separate values in an array stored as a String
      */
     private static final String ARRAY_SEPARATOR = ";";
+
+    /**
+     * Default sound level calibration value
+     */
+    private static final double DEFAULT_CALIBRATION_LEVEL = 9D;
 
     /**
      * Constructor. Creates the database if it does not already exist, and populates it with the
@@ -389,7 +389,7 @@ public class DBAccess implements AMDBContract {
             snap = new Snapshot(userId, timestamp, location, data, conditions, ema);
         }
         cursor.close();
-        return  snap;
+        return snap;
     }
 
     /**
@@ -445,7 +445,6 @@ public class DBAccess implements AMDBContract {
      */
     private SensorData getSensorData(long id) {
         SensorData data = null;
-        String[] selectionArgs = { "id = " + id };
         Cursor cursor = database.rawQuery("SELECT * FROM " + SensorDataTable.TABLE_NAME +
                 " WHERE id = " + id, null);
         if(cursor.getCount() > 0) {
@@ -568,5 +567,34 @@ public class DBAccess implements AMDBContract {
         }
         cursor.close();
         return name;
+    }
+
+    /**
+     * Sets the calibration constant for decibel levels.
+     * @param value The calibration constant for decibel levels
+     */
+    public void setBluetoothDeviceName(double value) {
+        ContentValues cv = new ContentValues(CalibrationLevel.COLUMNS.length);
+        cv.put("id", CalibrationLevel.CALIBRATION_LEVEL_ID);
+        cv.put("value", value);
+        database.insertWithOnConflict(CalibrationLevel.TABLE_NAME, null, cv,
+            SQLiteDatabase.CONFLICT_REPLACE);
+    }
+
+    /**
+     * Gets the calibration constant for decibel levels. If the calibration level has not been set,
+     * the value of DEFAULT_CALIBRATION_LEVEL is returned.
+     * @return The calibration constant for decibel levels
+     */
+    public double getBluetoothCalibration() {
+        double value = DEFAULT_CALIBRATION_LEVEL;
+        Cursor cursor = database.rawQuery("SELECT * FROM " + CalibrationLevel.TABLE_NAME +
+                " WHERE id = " + CalibrationLevel.CALIBRATION_LEVEL_ID, null);
+        if(cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            value = cursor.getDouble(cursor.getColumnIndex("name"));
+        }
+        cursor.close();
+        return value;
     }
 }
