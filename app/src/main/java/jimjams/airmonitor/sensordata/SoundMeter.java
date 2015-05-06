@@ -46,6 +46,8 @@ public class SoundMeter {
 
     private static String mFileName = null;
 
+    private int lastSL = 0;
+
     public SoundMeter() {
         mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
         mFileName += "/audiorecordtest.3gp";
@@ -82,10 +84,18 @@ public class SoundMeter {
     public int getAmplitude() {
         if (mRecorder != null){
             // PREPARE sound data for database entry [DESCRIPTION:VALUE:UNITS;]
-            data  = "SoundLevel:" + Integer.toString(mRecorder.getMaxAmplitude()) + ":DB;";
-            access.updateCurrentData(generator.getData(data));
-            Log.d("tag", data);
-            return 1;
+            int soundLevel =  mRecorder.getMaxAmplitude();
+            if(soundLevel != 0) {
+                soundLevel = (int) (Math.log((double) soundLevel) * 6.9);
+                data = "SoundLevel:" + Integer.toString(soundLevel) + ":DB;";
+                access.updateCurrentData(generator.getData(data));
+                lastSL = soundLevel;
+            }else{
+                access.updateCurrentData(generator.getData("SoundLevel:" + lastSL + ":DB;"));
+            }
+            //Log.d("tag", data);
+
+            return soundLevel;
         }else {
             return 0;
         }

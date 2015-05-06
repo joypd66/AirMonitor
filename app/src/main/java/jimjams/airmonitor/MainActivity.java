@@ -138,7 +138,7 @@ public class MainActivity extends ActionBarActivity {
             closeBT();
         }catch(IOException|NullPointerException e){
             //
-            feedbackText.setText("Cannot close bt in onStop(): " + e);
+            //feedbackText.setText("Cannot close bt in onStop(): " + e);
         }
 
         super.onStop();
@@ -149,7 +149,9 @@ public class MainActivity extends ActionBarActivity {
         sound.start();
 
         if(access.getBluetoothDeviceName() == null){
+            startTimer();
             feedbackText.setText("No Bluetooth device in memory.");
+
         }else {
             // TRY to start bt
             try {
@@ -160,7 +162,7 @@ public class MainActivity extends ActionBarActivity {
             catch (IOException | NullPointerException ex) {
                 // Removed feedback text on error
 
-                feedbackText.setText("Error in onResume: " + ex);
+                //feedbackText.setText("Error in onResume: " + ex);
                 access.clearCurrentData();
                 startTimer();
             }
@@ -439,52 +441,6 @@ public class MainActivity extends ActionBarActivity {
         workerThread.start();
     }
 
-    /**
-     * BEGINLISTENINGFORDATA
-     * Thread to get updates from AirCasting Device
-     * UPDATES values on screen using GenerateSensorData
-     */
-    void beginListenForDataNoBT()
-    {
-        // INSTANTIATE handler
-        // handler has the scope to communicate between this class and Main Activity
-        final Handler handler = new Handler();
-        //This is the ASCII code for a newline character, which is used in Arduino code
-        //final byte delimiter = 10;
-
-        stopWorker = false;
-        //readBufferPosition = 0;
-        //readBuffer = new byte[1024];
-        // DELIMITTOR for string balues - unused in this class, but used in GenerateSensor Data JPM
-        //final String minorDelims = ";";
-
-        workerThread = new Thread(new Runnable()
-        {
-            public void run()
-            {
-                while (!Thread.currentThread().isInterrupted() && !stopWorker) {
-                    // TRY to get data
-                    final Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            // Do something after 5s = 5000ms
-                            //sound.getAmplitude();
-                            refreshAQInset();
-                        }
-                    }, 5000);
-                }
-            }
-
-        });
-
-        workerThread.start();
-
-        
-
-    }
-
-
     public void startTimer() {
 
         //set a new Timer
@@ -499,7 +455,7 @@ public class MainActivity extends ActionBarActivity {
 
         //schedule the timer, after the first 5000ms the TimerTask will run every 10000ms
 
-        timer.schedule(timerTask, 0, 1000); //
+        timer.schedule(timerTask, 1000, 1000); //
 
     }
 
