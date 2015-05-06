@@ -95,6 +95,7 @@ public class MapActivity extends ActionBarActivity
         // The view has been reloaded. Get the map ready again.
         Log.v(getLocalClassName(), "onRestart() mapActivity");
         prepareMap();
+        super.onRestart();
     }
 
     /*
