@@ -32,6 +32,11 @@ public class DBAccess implements AMDBContract {
     private SQLiteDatabase database;
 
     /**
+     * Used to identify source class for log
+     */
+    private String className = getClass().getSimpleName();
+
+    /**
      * Used to separate values in an array stored as a String
      */
     private static final String ARRAY_SEPARATOR = ";";
@@ -75,6 +80,10 @@ public class DBAccess implements AMDBContract {
         // Bluetooth device name table
         database.execSQL(getTableCreateString(BluetoothDeviceName.TABLE_NAME,
                 BluetoothDeviceName.COLUMNS));
+
+        // Bluetooth device name table
+        database.execSQL(getTableCreateString(CalibrationLevel.TABLE_NAME,
+                CalibrationLevel.COLUMNS));
     }
 
     /**
@@ -575,7 +584,7 @@ public class DBAccess implements AMDBContract {
      * Sets the calibration constant for decibel levels.
      * @param value The calibration constant for decibel levels
      */
-    public void setBluetoothDeviceName(double value) {
+    public void setBluetoothCalibration(double value) {
         ContentValues cv = new ContentValues(CalibrationLevel.COLUMNS.length);
         cv.put("id", CalibrationLevel.CALIBRATION_LEVEL_ID);
         cv.put("value", value);
@@ -594,7 +603,7 @@ public class DBAccess implements AMDBContract {
                 " WHERE id = " + CalibrationLevel.CALIBRATION_LEVEL_ID, null);
         if(cursor.getCount() > 0) {
             cursor.moveToFirst();
-            value = cursor.getDouble(cursor.getColumnIndex("name"));
+            value = cursor.getDouble(cursor.getColumnIndex("value"));
         }
         cursor.close();
         return value;

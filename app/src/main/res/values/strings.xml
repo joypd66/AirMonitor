@@ -71,5 +71,6 @@
     <string name="showPaired">Show Paired Devices</string>
     <string name="search">Search New Devices / Cancel Search</string>
     <string name="makeDisc">Make Device Discoverable</string>
+    <string name="soundCali">60 decibel Calibrate</string>
 
 </resources>

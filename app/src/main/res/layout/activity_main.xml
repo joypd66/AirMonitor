@@ -50,6 +50,23 @@
         android:textSize="24sp"
         android:layout_gravity="center"/-->
 
+    <!-- Button to set sound calibration -->
+    <info.hoang8f.widget.FButton
+        android:id="@+id/soundCalibration"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="40dp"
+        android:minHeight="@dimen/demo_button_min_height"
+        android:minWidth="@dimen/demo_button_min_width"
+        android:textColor="@android:color/white"
+        fbutton:buttonColor="@color/fbutton_color_peter_river"
+        fbutton:shadowEnabled="true"
+        android:onClick="on_MainScreen_calibration_button_Click"
+        android:text="@string/soundCali"
+        android:textSize="28sp"
+        android:layout_gravity="center"
+        android:layout_below="@+id/mainScreen_airQualityInset"/>
+
    <!-- Button to take an EMA -->
     <info.hoang8f.widget.FButton
         android:id="@+id/EMA_button"

@@ -76,6 +76,8 @@ public class MainActivity extends ActionBarActivity {
      * SOUND METER JPM
      */
     SoundMeter sound = new SoundMeter();
+    // Variable for sound calibration
+    double calibration;
 
     /**
      * INSTANTIATE TextView used for testing JPM
@@ -244,15 +246,7 @@ public class MainActivity extends ActionBarActivity {
      * @param emaBtn The EMA button on the main screen
      */
     public void on_MainScreen_EMA_button_Click(View emaBtn) {
-        /*
-        sound.stop();
-        try {
-            closeBT();
-        }catch(IOException|NullPointerException e){
-            //
-            feedbackText.setText("Cannot close bt EMA button pressed" + e);
-        }
-        */
+
         Intent intent = new Intent(this, EMAActivity.class);
         startActivity(intent);
     }
@@ -262,15 +256,7 @@ public class MainActivity extends ActionBarActivity {
      * @param histBtn The history button on the main screen
      */
     public void on_MainScreen_hist_button_Click(View histBtn) {
-        /*
-        sound.stop();
-        try {
-            closeBT();
-        }catch(IOException|NullPointerException e){
-            //
-            feedbackText.setText("Cannot close bt HIST button pressed" + e);
-        }
-        */
+
       Intent intent = new Intent(this, HistoryActivity.class);
       startActivity(intent);
     }
@@ -281,19 +267,23 @@ public class MainActivity extends ActionBarActivity {
     }
 
     /**
+     * Invoked when the sound calibration button is pressed
+     */
+    public void on_MainScreen_calibration_button_Click(View caliBtn){
+        //feedbackText.setText(Integer.toString(sound.getAmplitude()));
+        calibration = 60/Math.log(sound.getAmplitude());
+        // SAVE calibration to database
+        access.setBluetoothCalibration(calibration);
+
+        // testing - feedbackText.setText(Double.toString(calibration));
+    }
+
+    /**
      * Invoked when the history button on the main screen is clicked.
      * @param blueBtn The history button on the main screen
      */
     public void on_MainScreen_Bluetooth_button_Click(View blueBtn) {
-        /*
-        sound.stop();
-        try {
-            closeBT();
-        }catch(IOException|NullPointerException e){
-            //
-            feedbackText.setText("Cannot close bt BT button pressed" + e);
-        }
-        */
+
         Intent intent = new Intent(this, BluetoothActivity.class);
         startActivity(intent);
     }

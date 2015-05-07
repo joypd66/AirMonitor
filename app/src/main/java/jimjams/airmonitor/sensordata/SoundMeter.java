@@ -18,6 +18,7 @@
 package jimjams.airmonitor.sensordata;
 
 
+import android.database.sqlite.SQLiteException;
 import android.media.MediaRecorder;
 import android.os.Environment;
 
@@ -43,6 +44,7 @@ public class SoundMeter {
     private static String mFileName = null;
 
     private int lastSL = 0;
+    private int soundLevel, soundLevelReturn;
 
     public SoundMeter() {
         mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
@@ -76,16 +78,17 @@ public class SoundMeter {
     public int getAmplitude() {
         if (mRecorder != null){
             // PREPARE sound data for database entry [DESCRIPTION:VALUE:UNITS;]
-            int soundLevel =  mRecorder.getMaxAmplitude();
+            soundLevel =  mRecorder.getMaxAmplitude();
+            soundLevelReturn = soundLevel;
             if(soundLevel != 0) {
-                soundLevel = (int) (Math.log((double) soundLevel) * 6.9);
+                soundLevel = (int) (Math.log((double) soundLevel) * access.getBluetoothCalibration());
                 data = "SoundLevel:" + Integer.toString(soundLevel) + ":DB;";
                 access.updateCurrentData(generator.getData(data));
                 lastSL = soundLevel;
             }else{
                 access.updateCurrentData(generator.getData("SoundLevel:" + lastSL + ":DB;"));
             }
-            return soundLevel;
+            return soundLevelReturn;
         }else {
             return 0;
         }

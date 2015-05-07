@@ -71,7 +71,7 @@ public class Snapshot {
             IllegalArgumentException e) {
          location = null;
       }
-      Log.d(className, this.toString());
+      //Log.d(className, this.toString());
    }
 
    /**
