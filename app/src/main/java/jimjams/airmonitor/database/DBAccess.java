@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteFullException;
 import android.location.Location;
-import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -29,12 +28,7 @@ public class DBAccess implements AMDBContract {
     /**
      * The SQLiteDatabase containing saved data for the AirMonitor app
      */
-    private SQLiteDatabase database;
-
-    /**
-     * Used to identify source class for log
-     */
-    private String className = getClass().getSimpleName();
+    private final SQLiteDatabase database;
 
     /**
      * Used to separate values in an array stored as a String
@@ -133,7 +127,7 @@ public class DBAccess implements AMDBContract {
      * @param data The set of SensorData to be saved
      * @return IDs of the records inserted into the table
      */
-    public ArrayList<Long> saveSensorData(ArrayList<SensorData> data) {
+    private ArrayList<Long> saveSensorData(ArrayList<SensorData> data) {
         // Create array of IDs to be used for this set of data
         ArrayList<Long> ids = new ArrayList<>(data.size());
 
@@ -147,7 +141,6 @@ public class DBAccess implements AMDBContract {
             cv.put("displayValue", datum.getDisplayValue());
             ids.add(database.insert(SensorDataTable.TABLE_NAME, null, cv));
         }
-
         // Return the IDs of the inserted rows
         return ids;
     }
@@ -156,7 +149,7 @@ public class DBAccess implements AMDBContract {
      * Saves an EcologicalMomentaryAssessment to the database.
      * @param ema The EMA to be saved
      */
-    public long saveEMA(EcologicalMomentaryAssessment ema) {
+    private long saveEMA(EcologicalMomentaryAssessment ema) {
         // Populate the column values
         ContentValues cv = new ContentValues(EMATable.COLUMNS.length - 1);
         cv.put("indoors", ema.getIndoors());
@@ -168,7 +161,6 @@ public class DBAccess implements AMDBContract {
         cv.put("intention", ema.getIntention());
         cv.put("behavior", ema.getBehavior());
         cv.put("barrier", ema.getBarrier());
-
         // Return the id of the inserted row
         return database.insert(EMATable.TABLE_NAME, null, cv);
     }
@@ -318,7 +310,6 @@ public class DBAccess implements AMDBContract {
      * @return All Snapshots in the database
      */
     public ArrayList<Snapshot> getSnapshots(long userId) {
-        Log.d(className, toString(SnapshotTable.TABLE_NAME));
         Cursor cursor = database.rawQuery("SELECT * FROM " + SnapshotTable.TABLE_NAME +
                 " WHERE userId = " + userId, null);
         ArrayList<Snapshot> snaps = new ArrayList<>(cursor.getCount());
@@ -337,7 +328,7 @@ public class DBAccess implements AMDBContract {
      * @param id The ID of the Snapshot to be retrieved
      * @return The specified Snapshot, or null
      */
-    public Snapshot getSnapshot(long id) {
+    private Snapshot getSnapshot(long id) {
         Snapshot snap = null;
         Cursor cursor = database.rawQuery("SELECT * FROM " + SnapshotTable.TABLE_NAME +
                 " WHERE id = " + id, null);

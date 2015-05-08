@@ -1,29 +1,25 @@
 package jimjams.airmonitor;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
-import android.bluetooth.BluetoothSocket;
-import android.os.Bundle;
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import java.util.Set;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
+
+import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Set;
 
 import jimjams.airmonitor.database.DBAccess;
 
@@ -39,11 +35,6 @@ public class BluetoothActivity extends ActionBarActivity {
     private Button listPairedButton = null;
     private Button searchButton = null;
 
-    /*This is not needed in the project right now
-    //Make Device Discoverable
-    private Button makeDiscButton = null;
-    */
-
     //declare objects
     private BluetoothAdapter bluetoothAdapter = null;
     private BluetoothDevice bluetoothDevice = null;
@@ -52,27 +43,18 @@ public class BluetoothActivity extends ActionBarActivity {
     // DATA object
     private DBAccess access = DBAccess.getDBAccess();
 
-
-
     private ListView listViewPaired = null;
     private ListView listViewDetected = null;
 
-
-    ArrayList<BluetoothDevice> arrayListDetectedBluetoothDevices = null;
-    ArrayList<BluetoothDevice> arrayListPairedBluetoothDevices = null;
+    private ArrayList<BluetoothDevice> arrayListDetectedBluetoothDevices = null;
+    private ArrayList<BluetoothDevice> arrayListPairedBluetoothDevices = null;
     private Set<BluetoothDevice> pairedDevices = null;
-
 
     private ArrayAdapter<String> pairedAdapter = null;
     private ArrayAdapter<String> detectedAdapter = null;
 
-    /// FOR testing
-    private String className = getClass().getSimpleName();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        //Log.e(className, bluetoothDevice.getName());
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth);
@@ -156,7 +138,6 @@ public class BluetoothActivity extends ActionBarActivity {
 
                     // SAVE device name
                     access.setBluetoothDeviceName(bluetoothDevice.getName());
-                    //Log.d("bluetoothName", bluetoothDevice.getName());
 
                     Toast.makeText(getApplicationContext(), bluetoothDevice.getName() + " connected.", Toast.LENGTH_SHORT).show();}//end onItemClick method
             });
@@ -199,7 +180,7 @@ public class BluetoothActivity extends ActionBarActivity {
     }//end onCreate method
 
     //This method will turn on the bluetooth or display a message
-    public void turnOn(View view) {
+    private void turnOn(View view) {
         if (!bluetoothAdapter.isEnabled()) {
             //Create new intent and run it.
             Intent turnOnIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -215,7 +196,7 @@ public class BluetoothActivity extends ActionBarActivity {
     }//end turnOn method
 
     //This message will show a list of paired devices
-    public void showPaired(View view) {
+    private void showPaired(View view) {
         //clear the adapter
         pairedAdapter.clear();
 
@@ -238,7 +219,7 @@ public class BluetoothActivity extends ActionBarActivity {
     }//end showPaired method
 
     //this creates a broadcast receiver
-    final BroadcastReceiver bluetoothReceiver = new BroadcastReceiver() {
+    final private BroadcastReceiver bluetoothReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             //Message message = Message.obtain();
             String action = intent.getAction();
@@ -275,7 +256,7 @@ public class BluetoothActivity extends ActionBarActivity {
     };
 
     //this method will search for new bluetooth devices and display them
-    public void search(View view) {
+    private void search(View view) {
         //if bluetooth adapter is enabled begin search or cancel search
         if (bluetoothAdapter.isEnabled()) {
 
@@ -306,35 +287,14 @@ public class BluetoothActivity extends ActionBarActivity {
     }//end search method
 
     //this message will disable the bluetooth adapter and display a message
-    public void turnOff(View view) {
+    private void turnOff(View view) {
         //Disable Bluetooth Adapter
         bluetoothAdapter.disable();
         //Create Message
         Toast.makeText(getApplicationContext(), "Bluetooth turned off", Toast.LENGTH_LONG).show();
     }//end turnOff method
 
-    /*This is not needed for our application at this time
-    //this method will make the bluetooth device discoverable
-    public void makeDisc(View view) {
-        //if the bluetooth adapter is enabled make device discoverable
-        if (bluetoothAdapter.isEnabled()) {
-            //Create new intent that will make device discoverable
-            Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-            discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
-
-            //make the device discoverable
-            startActivity(discoverableIntent);
-        }//end if statement
-
-        //else if the bluetooth adapter is disabled display a message
-        else {
-            //Create Message
-            Toast.makeText(getApplicationContext(), "Bluetooth is off", Toast.LENGTH_LONG).show();
-        }//end else statement
-    }//end makeDisc method
-    */
-
-    public boolean createBond(BluetoothDevice bluetoothDevice) throws Exception {
+    private boolean createBond(BluetoothDevice bluetoothDevice) throws Exception {
         Class class1 = Class.forName("android.bluetooth.BluetoothDevice");
         Method createBondMethod = class1.getMethod("createBond");
         Boolean result = (Boolean) createBondMethod.invoke(bluetoothDevice);
@@ -343,23 +303,14 @@ public class BluetoothActivity extends ActionBarActivity {
     }//end createBond method
 
     public void connect(BluetoothDevice bluetoothDevice){
-        //DEBUGGING:
-        //System.out.println("Device will create a socket next");
-
         bluetoothSocket = createSocket(bluetoothDevice);
 
-        //DEBUGGING:
-        //System.out.println("Device created a socket");
         if(bluetoothSocket != null) {
             try {
-                //DEBUGGING:
-                //System.out.println("Device will try to connect socket");
                 bluetoothSocket.connect();
 
                 //Create Message
                 Toast.makeText(getApplicationContext(), "Device connected", Toast.LENGTH_LONG).show();
-
-                //System.out.println("Device successfully connected");
             }//end try block
             catch (Exception e) {
                 //Create Message
@@ -367,9 +318,6 @@ public class BluetoothActivity extends ActionBarActivity {
                 e.printStackTrace();
             }//end catch block
         }//end if statement
-        else{
-            System.out.println("NULL BLUETOOTH SOCKET");
-        }//end else statement
     }//end waitForConnectMethod
 
     public void disconnect(BluetoothSocket socket){
@@ -385,15 +333,13 @@ public class BluetoothActivity extends ActionBarActivity {
         }//end catch block
     }//end disconnect method
 
-    public static BluetoothSocket createSocket(BluetoothDevice device){
+    private static BluetoothSocket createSocket(BluetoothDevice device){
         BluetoothSocket socket = null;
         try{
             Method m = device.getClass().getMethod("createRfcommSocket", int.class);
             socket = (BluetoothSocket) m.invoke(device, 1);
         }//end try method
         catch(Exception e){
-            //DEBUGGING:
-            //System.out.println("Device failed to create a socket");
             e.printStackTrace();
         }//end catch method
 
@@ -417,7 +363,6 @@ public class BluetoothActivity extends ActionBarActivity {
     protected void onDestroy() {
         //TODO Auto-generated method stub
         super.onDestroy();
-
 
     }//end onDestroy method
 }

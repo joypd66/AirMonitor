@@ -40,7 +40,6 @@ public class Profile {
          id = 0;
          conditions = new ArrayList<>();
       }
-      // Log.d(className, toString());
    }
 
    /**

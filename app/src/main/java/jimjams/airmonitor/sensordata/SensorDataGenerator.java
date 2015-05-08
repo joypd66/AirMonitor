@@ -15,14 +15,10 @@ public class SensorDataGenerator {
      */
     private static SensorDataGenerator instance = null;
 
-    private DBAccess access = DBAccess.getDBAccess();
-
     /**
-     * Chance for a given DataCategory to be used returned by {@link #getData()}.
-     * This value can be adjusted to allow different arrangements of test data.
-     * Value should be from 0 - 1.
+     * Access to the database
      */
-    private final static double RETURN_CHANCE = 1;
+    private DBAccess access = DBAccess.getDBAccess();
 
     /**
      * Constructor. Private to prevent unauthorized instantiation.
@@ -32,11 +28,10 @@ public class SensorDataGenerator {
 
     /**
      * Returns the current instance of SensorDataGenerator.
-     *
      * @return The current instance of SensorDataGenerator
      */
     public static SensorDataGenerator getInstance() {
-        if (instance == null) {
+        if(instance == null) {
             instance = new SensorDataGenerator();
         }
         return instance;
@@ -45,7 +40,6 @@ public class SensorDataGenerator {
     /**
      * Returns sensor data as an array of SensorData objects. Categories for which there is no data
      * are not returned.
-     *
      * @return Sensor data
      */
     public ArrayList<SensorData> getData(String sensorData) {
@@ -56,7 +50,7 @@ public class SensorDataGenerator {
         //for(DataCategory dataCat: dataCats) {
         for (String value : tokens) {
             //FURTHER parse tokens in to bits using ':' delimiter breaking single sensor
-            // data in to name, value and units (array 0, 1 and 2 respectiviy [set in Arduino code])
+            // data in to name, value and units (array 0, 1 and 2 respectively [set in Arduino code])
             String[] bits = value.split(":");
             // ADD data to List by INSTANTIATING SensorData object
             data.add(new SensorData(bits[0], bits[0], Double.parseDouble(bits[1]), 0, bits[2]));
@@ -69,7 +63,6 @@ public class SensorDataGenerator {
     /**
      * Returns sensor data as an array of SensorData objects. Categories for which there is no data
      * are not returned.
-     *
      * @return Sensor data
      */
     public ArrayList<SensorData> getData() {

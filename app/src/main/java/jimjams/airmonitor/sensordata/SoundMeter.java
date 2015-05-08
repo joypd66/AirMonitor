@@ -17,8 +17,6 @@
 
 package jimjams.airmonitor.sensordata;
 
-
-import android.database.sqlite.SQLiteException;
 import android.media.MediaRecorder;
 import android.os.Environment;
 
@@ -33,6 +31,7 @@ public class SoundMeter {
      * Database access
      */
     private DBAccess access = DBAccess.getDBAccess();
+
     /**
      * Reference to the SensorGenerator used to get sensor data
      */

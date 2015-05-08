@@ -1,9 +1,8 @@
 package jimjams.airmonitor;
 
 import android.location.Location;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -51,22 +50,18 @@ public class MapActivity extends ActionBarActivity
     private DBAccess dbAccess = DBAccess.getDBAccess(); // DB Access
     private Hashtable<Marker, Snapshot> markerTable;            // The map used for marker related stuff
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-        // Acuqire the MapFragment from resources
+        // Acquire the MapFragment from resources
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
 
         // Who gets updated when the GoogleMap object is ready?
         // this object does.
         mapFragment.getMapAsync(this);
-
-
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -93,7 +88,6 @@ public class MapActivity extends ActionBarActivity
     @Override
     protected void onRestart() {
         // The view has been reloaded. Get the map ready again.
-        Log.v(getLocalClassName(), "onRestart() mapActivity");
         prepareMap();
         super.onRestart();
     }
@@ -104,7 +98,6 @@ public class MapActivity extends ActionBarActivity
 
     // Prepares the map for viewing upon creating the view
     private void prepareMap() {
-        Log.v(this.getLocalClassName(), "prepareMap()");
         long profileID = dbAccess.getProfileId();
 
         // A list of the snapshots, for getting the locations
@@ -113,7 +106,6 @@ public class MapActivity extends ActionBarActivity
         if (this.mainMap == null) {
             // Something went seriously wrong. This should never be called
             // But I'm paranoid so why not add it...
-            Log.wtf(this.getLocalClassName(), "The mainMap was null.. we should just quit and get it together...", new Exception());
             System.exit(34);
         }
 
@@ -140,10 +132,8 @@ public class MapActivity extends ActionBarActivity
             // Set the position of the marker
 
             if (wLocation == null) {
-                Log.d(this.getLocalClassName(), "There was no location. Continue on to the next.");
                 continue;
             }
-
 
             wOptions.position(new LatLng(wLocation.getLatitude(), wLocation.getLongitude()));
             Date snapshotDate = wSnapshot.getTimestamp();
@@ -158,7 +148,6 @@ public class MapActivity extends ActionBarActivity
             // each marker. How can we do this? A Hashtable! Use the marker as a key,
             // and the snapshot will be the associated object.
             markerTable.put(wMarker, wSnapshot);
-
         }
 
         // zoom in to the most populated area of markers
@@ -184,9 +173,7 @@ public class MapActivity extends ActionBarActivity
             mainMap.moveCamera(cameraUpdate);
         } catch (IllegalStateException e) {
             // No points exist, add no points.
-            Log.i(this.getLocalClassName(), "No points found, catching the exception", e);
         }
-
     }
 
     /*
@@ -194,8 +181,6 @@ public class MapActivity extends ActionBarActivity
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Log.v(null, "onMapReady(GoogleMap)");
-
         // Set the mainMap object the ready googleMap
         this.mainMap = googleMap;
 
@@ -208,8 +193,6 @@ public class MapActivity extends ActionBarActivity
 
         // Prepare the map using the internal prepareMap() function
         prepareMap();
-
-
     }
 
     /*
@@ -223,8 +206,6 @@ public class MapActivity extends ActionBarActivity
 
     @Override
     public View getInfoContents(Marker marker) {
-        Log.v(null, "getInfoContents()");
-
         // Get the Snapshot for this Marker from the Hashtable
         Snapshot workingSnapshot = markerTable.get(marker);
 
@@ -256,9 +237,6 @@ public class MapActivity extends ActionBarActivity
             locationLabel.setText(wEMA.getReportedLocation());
         }
 
-
-
-
         // Start getting data from the Snapshot.
         // First, get the data ArrayList from the Snapshot.
         ArrayList<SensorData> dataList = workingSnapshot.getData();
@@ -276,8 +254,6 @@ public class MapActivity extends ActionBarActivity
                 humidityLabel.setText(wData.getDisplayValue());
             }
         }
-
-
         return infoView;
     }
 } // End class bracket

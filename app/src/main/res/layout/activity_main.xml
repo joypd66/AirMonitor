@@ -126,14 +126,20 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/mainScreen_map_button"
-        android:id="@+id/button"
-        android:layout_centerHorizontal="true"
-        android:layout_above="@+id/history_button"
-        android:onClick="on_MainScreen_map_button_Click" />
-
+    <info.hoang8f.widget.FButton
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_margin="10dp"
+          android:minHeight="@dimen/demo_button_min_height"
+          android:minWidth="@dimen/demo_button_min_width"
+          android:textColor="@android:color/white"
+          fbutton:buttonColor="@color/fbutton_color_sun_flower"
+          fbutton:shadowEnabled="true"
+          android:text="@string/mainScreen_map_button"
+          android:id="@+id/map_button"
+          android:onClick="on_MainScreen_map_button_Click"
+          android:textSize="24sp"
+          android:layout_alignParentRight="true"
+          android:layout_above="@id/Bluetooth_button"/>
 
 </RelativeLayout>

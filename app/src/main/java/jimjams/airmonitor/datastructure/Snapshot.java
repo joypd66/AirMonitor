@@ -3,7 +3,6 @@ package jimjams.airmonitor.datastructure;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -71,7 +70,6 @@ public class Snapshot {
             IllegalArgumentException e) {
          location = null;
       }
-      //Log.d(className, this.toString());
    }
 
    /**
