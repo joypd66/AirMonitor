@@ -10,37 +10,37 @@ public interface AMDBContract {
     /**
      * Database path
      */
-    public final static String DB_DIR = "/data/data/jimjams.airmonitor";
+    String DB_DIR = "/data/data/jimjams.airmonitor";
 
     /**
      * Database name
      */
-    public final static String DB_NAME = "AirMonitor";
+    String DB_NAME = "AirMonitor";
 
     /**
      * Database filename
      */
-    public final static String DB_FILENAME = DB_NAME + ".db";
+    String DB_FILENAME = DB_NAME + ".db";
 
     /**
      * Database version number
      */
-    public final static int DB_VERSION = 1;
+    int DB_VERSION = 1;
 
     /**
      * "Create if not exist" string
      */
-    public final static String CREATE = "CREATE TABLE IF NOT EXISTS ";
+    String CREATE = "CREATE TABLE IF NOT EXISTS ";
 
     /**
      * "Drop table" string
      */
-    public final static String DROP = "DROP TABLE IF EXISTS ";
+    String DROP = "DROP TABLE IF EXISTS ";
 
     /**
      * <p>Database table containing Profile data. Note that the id column will <b>not</b> be
-     * incremented; it will initially be 0 and may be updated at a later time if server-side data
-     * storage is implemented.</p>
+     *    incremented; it will initially be 0 and may be updated at a later time if server-side
+     *    data storage is implemented.</p>
      * <p>Columns in the table:</p>
      * <dl>
      *     <dt>id</dt>
@@ -49,7 +49,7 @@ public interface AMDBContract {
      *     <dd>Existing conditions, formatted as a semicolon-separated String</dd>
      * </dl>
      */
-    public static final class ProfileTable implements BaseColumns {
+    final class ProfileTable implements BaseColumns {
 
         /**
          * Name of the table
@@ -95,7 +95,7 @@ public interface AMDBContract {
      *     <dt>The user's report of what prevented him/her from relocating.</dt>
      * </dl>
      */
-    public static final class EMATable implements BaseColumns {
+    final class EMATable implements BaseColumns {
 
         /**
          * Name of the table
@@ -149,7 +149,7 @@ public interface AMDBContract {
      *     <dd>Reference to the ID of the corresponding EMA in the EMATable</dd>
      * </dl>
      */
-    public static final class SnapshotTable implements BaseColumns {
+    final class SnapshotTable implements BaseColumns {
 
         /**
          * Name of the table
@@ -191,7 +191,7 @@ public interface AMDBContract {
      *     <dd>Display value of the reading</dd>
      * </dl>
      */
-    public static final class SensorDataTable implements BaseColumns {
+    final class SensorDataTable implements BaseColumns {
 
         /**
          * Name of the table
@@ -225,7 +225,7 @@ public interface AMDBContract {
      *     <dd>Display value of the reading</dd>
      * </dl>
      */
-    public static final class CurrentDataTable implements BaseColumns {
+    final class CurrentDataTable implements BaseColumns {
 
         /**
          * Name of the table
@@ -253,7 +253,7 @@ public interface AMDBContract {
      *     <dd>Name of the device</dd>
      * </dl>
      */
-    public static final class BluetoothDeviceName implements BaseColumns {
+    final class BluetoothDeviceName implements BaseColumns {
 
         /**
          * Name of the table
@@ -271,6 +271,37 @@ public interface AMDBContract {
         public static final String[][] COLUMNS = {
             { "id", "INTEGER PRIMARY KEY" },
             { "name", "TEXT" },
+        };
+    }
+
+    /**
+     * <p>Database used to store the Bluetooth device name.</p>
+     * <p>Columns in the table:</p>
+     * <dl>
+     *     <dt>id</dt>
+     *     <dd>Unique id for the record</dd>
+     *     <dt>name</dt>
+     *     <dd>Name of the device</dd>
+     * </dl>
+     */
+    final class CalibrationLevel implements BaseColumns {
+
+        /**
+         * Name of the table
+         */
+        public static final String TABLE_NAME = "calibrationLevel";
+
+        /**
+         * Row ID
+         */
+        public static final long CALIBRATION_LEVEL_ID = 1L;
+
+        /**
+         * Columns in the table
+         */
+        public static final String[][] COLUMNS = {
+            { "id", "INTEGER PRIMARY KEY" },
+            { "value", "REAL" },
         };
     }
 }

@@ -30,11 +30,6 @@ import jimjams.airmonitor.sensordata.SensorDataGenerator;
 public class EMAActivity extends ActionBarActivity {
 
    /**
-    * Used to identify source class for log
-    */
-   private String className = getClass().getSimpleName();
-
-   /**
     * Allows database access
     */
    private DBAccess access = DBAccess.getDBAccess();
@@ -200,9 +195,7 @@ public class EMAActivity extends ActionBarActivity {
       EcologicalMomentaryAssessment ema = getEma();
 
       Snapshot snapshot = new Snapshot(data, conditions, ema, this);
-      long snapshotId = access.saveSnapshot(snapshot);
-      // Log.d(className, snapshot.toString());
-      // Log.d(className, DBAccess.getDBAccess().toString(AMDBContract.SnapshotTable.TABLE_NAME));
+      access.saveSnapshot(snapshot);
 
       // Return to main screen
       Intent intent = new Intent(this, MainActivity.class);
@@ -342,6 +335,7 @@ public class EMAActivity extends ActionBarActivity {
          refreshExistingConditions();
       }
    }
+
    /**
     * Button subclass to associate a condition with the Button
     */

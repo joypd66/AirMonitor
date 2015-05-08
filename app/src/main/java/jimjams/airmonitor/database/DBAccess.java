@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteFullException;
 import android.location.Location;
-import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -29,17 +28,17 @@ public class DBAccess implements AMDBContract {
     /**
      * The SQLiteDatabase containing saved data for the AirMonitor app
      */
-    private SQLiteDatabase database;
-
-    /**
-     * Used to identify source class for log
-     */
-    private String className = getClass().getSimpleName();
+    private final SQLiteDatabase database;
 
     /**
      * Used to separate values in an array stored as a String
      */
     private static final String ARRAY_SEPARATOR = ";";
+
+    /**
+     * Default sound level calibration value
+     */
+    private static final double DEFAULT_CALIBRATION_LEVEL = 9D;
 
     /**
      * Constructor. Creates the database if it does not already exist, and populates it with the
@@ -75,6 +74,10 @@ public class DBAccess implements AMDBContract {
         // Bluetooth device name table
         database.execSQL(getTableCreateString(BluetoothDeviceName.TABLE_NAME,
                 BluetoothDeviceName.COLUMNS));
+
+        // Bluetooth device name table
+        database.execSQL(getTableCreateString(CalibrationLevel.TABLE_NAME,
+                CalibrationLevel.COLUMNS));
     }
 
     /**
@@ -124,7 +127,7 @@ public class DBAccess implements AMDBContract {
      * @param data The set of SensorData to be saved
      * @return IDs of the records inserted into the table
      */
-    public ArrayList<Long> saveSensorData(ArrayList<SensorData> data) {
+    private ArrayList<Long> saveSensorData(ArrayList<SensorData> data) {
         // Create array of IDs to be used for this set of data
         ArrayList<Long> ids = new ArrayList<>(data.size());
 
@@ -138,7 +141,6 @@ public class DBAccess implements AMDBContract {
             cv.put("displayValue", datum.getDisplayValue());
             ids.add(database.insert(SensorDataTable.TABLE_NAME, null, cv));
         }
-
         // Return the IDs of the inserted rows
         return ids;
     }
@@ -147,7 +149,7 @@ public class DBAccess implements AMDBContract {
      * Saves an EcologicalMomentaryAssessment to the database.
      * @param ema The EMA to be saved
      */
-    public long saveEMA(EcologicalMomentaryAssessment ema) {
+    private long saveEMA(EcologicalMomentaryAssessment ema) {
         // Populate the column values
         ContentValues cv = new ContentValues(EMATable.COLUMNS.length - 1);
         cv.put("indoors", ema.getIndoors());
@@ -159,7 +161,6 @@ public class DBAccess implements AMDBContract {
         cv.put("intention", ema.getIntention());
         cv.put("behavior", ema.getBehavior());
         cv.put("barrier", ema.getBarrier());
-
         // Return the id of the inserted row
         return database.insert(EMATable.TABLE_NAME, null, cv);
     }
@@ -309,7 +310,6 @@ public class DBAccess implements AMDBContract {
      * @return All Snapshots in the database
      */
     public ArrayList<Snapshot> getSnapshots(long userId) {
-        Log.d(className, toString(SnapshotTable.TABLE_NAME));
         Cursor cursor = database.rawQuery("SELECT * FROM " + SnapshotTable.TABLE_NAME +
                 " WHERE userId = " + userId, null);
         ArrayList<Snapshot> snaps = new ArrayList<>(cursor.getCount());
@@ -328,7 +328,7 @@ public class DBAccess implements AMDBContract {
      * @param id The ID of the Snapshot to be retrieved
      * @return The specified Snapshot, or null
      */
-    public Snapshot getSnapshot(long id) {
+    private Snapshot getSnapshot(long id) {
         Snapshot snap = null;
         Cursor cursor = database.rawQuery("SELECT * FROM " + SnapshotTable.TABLE_NAME +
                 " WHERE id = " + id, null);
@@ -391,7 +391,7 @@ public class DBAccess implements AMDBContract {
             snap = new Snapshot(userId, timestamp, location, data, conditions, ema);
         }
         cursor.close();
-        return  snap;
+        return snap;
     }
 
     /**
@@ -447,7 +447,6 @@ public class DBAccess implements AMDBContract {
      */
     private SensorData getSensorData(long id) {
         SensorData data = null;
-        String[] selectionArgs = { "id = " + id };
         Cursor cursor = database.rawQuery("SELECT * FROM " + SensorDataTable.TABLE_NAME +
                 " WHERE id = " + id, null);
         if(cursor.getCount() > 0) {
@@ -537,6 +536,13 @@ public class DBAccess implements AMDBContract {
     }
 
     /**
+     * Clears all current data from the database.
+     */
+    public void clearCurrentData() {
+        database.delete(CurrentDataTable.TABLE_NAME, null, null);
+    }
+
+    /**
      * Sets the name of the current Bluetooth device.
      * @param name The name of the current Bluetooth device
      */
@@ -563,5 +569,34 @@ public class DBAccess implements AMDBContract {
         }
         cursor.close();
         return name;
+    }
+
+    /**
+     * Sets the calibration constant for decibel levels.
+     * @param value The calibration constant for decibel levels
+     */
+    public void setBluetoothCalibration(double value) {
+        ContentValues cv = new ContentValues(CalibrationLevel.COLUMNS.length);
+        cv.put("id", CalibrationLevel.CALIBRATION_LEVEL_ID);
+        cv.put("value", value);
+        database.insertWithOnConflict(CalibrationLevel.TABLE_NAME, null, cv,
+            SQLiteDatabase.CONFLICT_REPLACE);
+    }
+
+    /**
+     * Gets the calibration constant for decibel levels. If the calibration level has not been set,
+     * the value of DEFAULT_CALIBRATION_LEVEL is returned.
+     * @return The calibration constant for decibel levels
+     */
+    public double getBluetoothCalibration() {
+        double value = DEFAULT_CALIBRATION_LEVEL;
+        Cursor cursor = database.rawQuery("SELECT * FROM " + CalibrationLevel.TABLE_NAME +
+                " WHERE id = " + CalibrationLevel.CALIBRATION_LEVEL_ID, null);
+        if(cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            value = cursor.getDouble(cursor.getColumnIndex("value"));
+        }
+        cursor.close();
+        return value;
     }
 }

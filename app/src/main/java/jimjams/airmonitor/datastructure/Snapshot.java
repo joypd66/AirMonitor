@@ -3,7 +3,6 @@ package jimjams.airmonitor.datastructure;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,12 +12,9 @@ import jimjams.airmonitor.sensordata.SensorData;
 
 /**
  * Captures instantaneous environmental data and associates it with a personal
- * Ecological Momentary Assessment (EMA).
+ * EcologicalMomentaryAssessment (EMA).
  */
 public class Snapshot {
-
-   private String className = getClass().getSimpleName();
-
    /**
     * The ID of the user to whom this Snapshot belongs
     */
@@ -74,7 +70,6 @@ public class Snapshot {
             IllegalArgumentException e) {
          location = null;
       }
-      Log.d(className, this.toString());
    }
 
    /**
@@ -89,7 +84,6 @@ public class Snapshot {
       this.conditions = conditions;
       this.ema = ema;
    }
-
 
    /**
     * Returns the user ID for this Snapshot.

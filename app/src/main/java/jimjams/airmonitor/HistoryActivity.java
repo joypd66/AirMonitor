@@ -24,8 +24,6 @@ import jimjams.airmonitor.datastructure.Profile;
 import jimjams.airmonitor.datastructure.Snapshot;
 import jimjams.airmonitor.sensordata.SensorData;
 
-// import android.text.format.DateFormat;
-
 public class HistoryActivity extends ActionBarActivity {
 
     /**
@@ -52,11 +50,6 @@ public class HistoryActivity extends ActionBarActivity {
      * Used to format latitude and longitude
      */
     private DecimalFormat decFormat = new DecimalFormat("0.00");
-
-    /**
-     * Used to identify source class for log
-     */
-    private String className = getClass().getSimpleName();
 
     /**
      * Used to format date for expando labels
@@ -128,14 +121,6 @@ public class HistoryActivity extends ActionBarActivity {
 
         // The LinearLayout which will hold everything
         LinearLayout layout = (LinearLayout)findViewById(R.id.history_layout);
-
-        // Add user id row
-/* I don't think this is really useful
-        TextView userIdRow = new TextView(this);
-        userIdRow.setText("User ID: " + userId);
-        userIdRow.setTextSize(FONT_UNIT, LABEL_FONT_SIZE);
-        layout.addView(userIdRow);
-*/
 
         // Add a row for each Snapshot
         ArrayList<Snapshot> snapshots = DBAccess.getDBAccess().getSnapshots(userId);
@@ -415,7 +400,7 @@ public class HistoryActivity extends ActionBarActivity {
      * @param conditions Snapshot's existing conditions
      * @return LinearLayout for a snapshot's existing conditions
      */
-    private LinearLayout getConditionLayout( View.OnClickListener listener,
+    private LinearLayout getConditionLayout(View.OnClickListener listener,
             ArrayList<String> conditions) {
         LinearLayout conditionLayout = new LinearLayout(this);
         conditionLayout.setOrientation(LinearLayout.VERTICAL);

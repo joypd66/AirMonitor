@@ -8,7 +8,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +23,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 
 import jimjams.airmonitor.database.DBAccess;
@@ -31,18 +31,7 @@ import jimjams.airmonitor.sensordata.SensorData;
 import jimjams.airmonitor.sensordata.SensorDataGenerator;
 import jimjams.airmonitor.sensordata.SoundMeter;
 
-
 public class MainActivity extends ActionBarActivity {
-
-    /**
-     * Delay between sensor data updates, in milliseconds
-     */
-    public final static long REFRESH_DELAY = 1500;
-
-    /**
-     * Used to identify source class for log
-     */
-    private String className = getClass().getSimpleName();
 
     /**
      * Font unit. This is a scaled pixel type; it will scale with the user's font preferences
@@ -57,30 +46,32 @@ public class MainActivity extends ActionBarActivity {
     /**
      * INSTANCES of required bluetooth classes JPM
      */
-    BluetoothAdapter mBluetoothAdapter;
-    BluetoothSocket mmSocket;
-    BluetoothDevice mmDevice;
-    OutputStream mmOutputStream;
-    InputStream mmInputStream;
+    private BluetoothAdapter mBluetoothAdapter;
+    private BluetoothSocket mmSocket;
+    private BluetoothDevice mmDevice;
+    private OutputStream mmOutputStream;
+    private InputStream mmInputStream;
 
     /**
      * INSTANCES of bluetooth helper classes JPM
      */
-    Thread workerThread;
-    byte[] readBuffer;
-    int readBufferPosition;
-    int counter;
-    volatile boolean stopWorker;
+    private Thread workerThread;
+    private byte[] readBuffer;
+    private int readBufferPosition;
+    private volatile boolean stopWorker;
 
     /**
      * SOUND METER JPM
      */
-    SoundMeter sound = new SoundMeter();
+    private SoundMeter sound = new SoundMeter();
+
+    // Variable for sound calibration
+    private double calibration;
 
     /**
      * INSTANTIATE TextView used for testing JPM
      */
-    TextView feedbackText;
+    // TextView feedbackText;
 
     /**
      * Database access
@@ -90,14 +81,15 @@ public class MainActivity extends ActionBarActivity {
     /**
      * Reference to the SensorGenerator used to get sensor data
      */
-    SensorDataGenerator generator;
+    private SensorDataGenerator generator;
 
     /**
-     * private Handler customHandler = new Handler();
-     * @param savedInstanceState
+     * for timer
      */
+    private Timer timer;
 
-    private Handler customHandler = new Handler();
+    private TimerTask timerTask;
+    private Handler handler = new Handler();
 
 
     @Override
@@ -108,7 +100,7 @@ public class MainActivity extends ActionBarActivity {
         /**
          * ASSIGN feedbackText TextView to object JPM
          */
-        feedbackText = (TextView)findViewById(R.id.feedbackText);
+        // feedbackText = (TextView)findViewById(R.id.feedbackText);
 
         // SSM Added
         generator = SensorDataGenerator.getInstance();
@@ -128,8 +120,6 @@ public class MainActivity extends ActionBarActivity {
         try {
             closeBT();
         }catch(IOException|NullPointerException e){
-            //
-            feedbackText.setText("Cannot close bt in onStop(): " + e);
         }
 
         super.onStop();
@@ -140,7 +130,8 @@ public class MainActivity extends ActionBarActivity {
         sound.start();
 
         if(access.getBluetoothDeviceName() == null){
-            feedbackText.setText("No Bluetooth device in memory.");
+            startTimer();
+
         }else {
             // TRY to start bt
             try {
@@ -149,9 +140,8 @@ public class MainActivity extends ActionBarActivity {
             }
             // CATCH and print IOException JPM
             catch (IOException | NullPointerException ex) {
-                // Removed feedback text on error
-
-                feedbackText.setText("Error in onResume: " + ex);
+                access.clearCurrentData();
+                startTimer();
             }
 
         }
@@ -208,7 +198,6 @@ public class MainActivity extends ActionBarActivity {
             header.addView(tv);
             aqi.addView(header);
             for(SensorData sd: data) {
-                // Log.d(className, "Adding data to AQInset.");
                 TableRow tr = new TableRow(this);
                 TextView label = new TextView(this), value = new TextView(this);
                 label.setText(sd.getDisplayName());
@@ -231,15 +220,7 @@ public class MainActivity extends ActionBarActivity {
      * @param emaBtn The EMA button on the main screen
      */
     public void on_MainScreen_EMA_button_Click(View emaBtn) {
-        /*
-        sound.stop();
-        try {
-            closeBT();
-        }catch(IOException|NullPointerException e){
-            //
-            feedbackText.setText("Cannot close bt EMA button pressed" + e);
-        }
-        */
+
         Intent intent = new Intent(this, EMAActivity.class);
         startActivity(intent);
     }
@@ -249,15 +230,7 @@ public class MainActivity extends ActionBarActivity {
      * @param histBtn The history button on the main screen
      */
     public void on_MainScreen_hist_button_Click(View histBtn) {
-        /*
-        sound.stop();
-        try {
-            closeBT();
-        }catch(IOException|NullPointerException e){
-            //
-            feedbackText.setText("Cannot close bt HIST button pressed" + e);
-        }
-        */
+
       Intent intent = new Intent(this, HistoryActivity.class);
       startActivity(intent);
     }
@@ -268,19 +241,20 @@ public class MainActivity extends ActionBarActivity {
     }
 
     /**
+     * Invoked when the sound calibration button is pressed
+     */
+    public void on_MainScreen_calibration_button_Click(View caliBtn){
+        calibration = 60/Math.log(sound.getAmplitude());
+        // SAVE calibration to database
+        access.setBluetoothCalibration(calibration);
+    }
+
+    /**
      * Invoked when the history button on the main screen is clicked.
      * @param blueBtn The history button on the main screen
      */
     public void on_MainScreen_Bluetooth_button_Click(View blueBtn) {
-        /*
-        sound.stop();
-        try {
-            closeBT();
-        }catch(IOException|NullPointerException e){
-            //
-            feedbackText.setText("Cannot close bt BT button pressed" + e);
-        }
-        */
+
         Intent intent = new Intent(this, BluetoothActivity.class);
         startActivity(intent);
     }
@@ -293,8 +267,7 @@ public class MainActivity extends ActionBarActivity {
      * ASSIGNS correct bluetooth device for use
      * JPM
      */
-
-    void findBT()
+    private void findBT()
     {
         // INSTANTIATE bluetoothAdapter
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -302,15 +275,14 @@ public class MainActivity extends ActionBarActivity {
         if(mBluetoothAdapter == null)
         {
             // DO something ?
-            //myLabel.setText("No bluetooth adapter available");
         }
 
         // IF bluetooth adaptor found && not enabled
-        if(!mBluetoothAdapter.isEnabled())
+        else if(!mBluetoothAdapter.isEnabled())
         {
             // ATTEMPT to enable bluetooth
-            Intent enableBluetooth = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBluetooth, 0);
+            // Intent enableBluetooth = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            // startActivityForResult(enableBluetooth, 0);
         }
 
         // GET bound devices from bluetoothAdaptor
@@ -332,7 +304,6 @@ public class MainActivity extends ActionBarActivity {
                 }
             }
         }
-        //myLabel.setText("Bluetooth Device Found");
     }
 
     /**
@@ -340,7 +311,7 @@ public class MainActivity extends ActionBarActivity {
      * Bluetooth handshake to connect for transmission JPM
      * @throws IOException
      */
-    void openBT() throws IOException
+    private void openBT() throws IOException
     {
         // GET unique UUID for standard SerialPortService ID
         UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb"); //Standard SerialPortService ID
@@ -364,7 +335,7 @@ public class MainActivity extends ActionBarActivity {
      * Thread to get updates from AirCasting Device
      * UPDATES values on screen using GenerateSensorData
      */
-    void beginListenForData()
+    private void beginListenForData()
     {
         // INSTANTIATE handler
         // handler has the scope to communicate between this class and Main Activity
@@ -429,58 +400,45 @@ public class MainActivity extends ActionBarActivity {
 
             }
         });
-
         workerThread.start();
     }
 
-    /**
-     * BEGINLISTENINGFORDATA
-     * Thread to get updates from AirCasting Device
-     * UPDATES values on screen using GenerateSensorData
-     */
-    void beginListenForDataNoBT()
-    {
-        // INSTANTIATE handler
-        // handler has the scope to communicate between this class and Main Activity
-        final Handler handler = new Handler();
-        //This is the ASCII code for a newline character, which is used in Arduino code
-        //final byte delimiter = 10;
+    private void startTimer() {
+        //set a new Timer
+        timer = new Timer();
 
-        stopWorker = false;
-        //readBufferPosition = 0;
-        //readBuffer = new byte[1024];
-        // DELIMITTOR for string balues - unused in this class, but used in GenerateSensor Data JPM
-        //final String minorDelims = ";";
+        //initialize the TimerTask's job
+        initializeTimerTask();
 
-        workerThread = new Thread(new Runnable()
-        {
-            public void run()
-            {
-                while (!Thread.currentThread().isInterrupted() && !stopWorker) {
-                    // TRY to get data
-                    final Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            // Do something after 5s = 5000ms
-                            //sound.getAmplitude();
-                            refreshAQInset();
-                        }
-                    }, 5000);
-                }
+        //schedule the timer, after the first 5000ms the TimerTask will run every 10000ms
+        timer.schedule(timerTask, 1000, 1000); //
+    }
+
+    public void stoptimertask(View v) {
+        //stop the timer, if it's not already null
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+    }
+
+    private void initializeTimerTask() {
+        timerTask = new TimerTask() {
+            public void run() {
+                //use a handler to run a toast that shows the current timestamp
+                handler.post(new Runnable() {
+                    public void run() {
+                        // SET sound
+                        sound.getAmplitude();
+                        // REFRESH AQInsert
+                        refreshAQInset();
+                    }
+                });
             }
-
-        });
-
-        workerThread.start();
-
-        
-
+        };
     }
 
-
-
-    void closeBT() throws IOException
+    private void closeBT() throws IOException
     {
         // SET stopworker to stop the beginListeningForData thread
         stopWorker = true;
@@ -492,7 +450,4 @@ public class MainActivity extends ActionBarActivity {
         mmSocket.close();
         //myLabel.setText("Bluetooth Closed");
     }
-
-
-
 }

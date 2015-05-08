@@ -14,8 +14,6 @@ import java.util.UUID;
 
 import jimjams.airmonitor.database.DBAccess;
 
-import static android.support.v4.app.ActivityCompat.startActivityForResult;
-
 /**
  * Created by justinmaccreery on 4/23/15.
  */
@@ -29,25 +27,24 @@ public class BluetoothObject {
     /**
      * INSTANCE of sensorDataGenerator
      */
-    SensorDataGenerator generator = SensorDataGenerator.getInstance();
+    private SensorDataGenerator generator = SensorDataGenerator.getInstance();
 
     /**
      * INSTANCES of required bluetooth classes JPM
      */
-    BluetoothAdapter mBluetoothAdapter;
-    BluetoothSocket mmSocket;
-    BluetoothDevice mmDevice;
-    OutputStream mmOutputStream;
-    InputStream mmInputStream;
+    private BluetoothAdapter mBluetoothAdapter;
+    private BluetoothSocket mmSocket;
+    private BluetoothDevice mmDevice;
+    private OutputStream mmOutputStream;
+    private InputStream mmInputStream;
 
     /**
      * INSTANCES of bluetooth helper classes JPM
      */
-    Thread workerThread;
-    byte[] readBuffer;
-    int readBufferPosition;
-    int counter;
-    volatile boolean stopWorker;
+    private Thread workerThread;
+    private byte[] readBuffer;
+    private int readBufferPosition;
+    private volatile boolean stopWorker;
 
     /**
      * PUBLIC constructor
@@ -64,7 +61,6 @@ public class BluetoothObject {
         catch (IOException | NullPointerException ex) {
             // RETURN error
             return ("Error: " + ex);
-            // beginListenForRandomData();
         }
     }
 
@@ -79,7 +75,7 @@ public class BluetoothObject {
      * JPM
      */
 
-    void findBT()
+    private void findBT()
     {
         // INSTANTIATE bluetoothAdapter
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -87,7 +83,6 @@ public class BluetoothObject {
         if(mBluetoothAdapter == null)
         {
             // DO something ?
-            //myLabel.setText("No bluetooth adapter available");
         }
 
         // IF bluetooth adaptor found && not enabled
@@ -95,7 +90,6 @@ public class BluetoothObject {
         {
             // ATTEMPT to enable bluetooth
             Intent enableBluetooth = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            //startActivityForResult(enableBluetooth, 0);
         }
 
         // GET bound devices from bluetoothAdaptor
@@ -125,7 +119,7 @@ public class BluetoothObject {
      * Bluetooth handshake to connect for transmission JPM
      * @throws java.io.IOException
      */
-    void openBT() throws IOException
+    private void openBT() throws IOException
     {
         // GET unique UUID for standard SerialPortService ID
         UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb"); //Standard SerialPortService ID
@@ -140,8 +134,6 @@ public class BluetoothObject {
 
         // START beginListeningForData thread
         beginListenForData();
-
-        //myLabel.setText("Bluetooth Opened");
     }
 
     /**
@@ -149,7 +141,7 @@ public class BluetoothObject {
      * Thread to get updates from AirCasting Device
      * UPDATES values on screen using GenerateSensorData
      */
-    void beginListenForData()
+    private void beginListenForData()
     {
         // INSTANTIATE handler
         // handler has the scope to communicate between this class and Main Activity
@@ -202,8 +194,6 @@ public class BluetoothObject {
                                         public void run()
                                         {
                                             // SEND read data to refreshAQInsert
-                                            //refreshAQInset(data);
-                                            //feedbackText.setText(data);
 
                                             // UPDATE data table containing latest sensor data
                                             access.updateCurrentData(generator.getData());
@@ -220,7 +210,6 @@ public class BluetoothObject {
                     catch (IOException ex)
                     {
                         stopWorker = true;
-                        //feedbackLabel.setText("In Stopworker");
                     }
                 }
             }
@@ -229,12 +218,11 @@ public class BluetoothObject {
         workerThread.start();
     }
 
-    public void closeBT() throws IOException
+    private void closeBT() throws IOException
     {
         stopWorker = true;
         mmOutputStream.close();
         mmInputStream.close();
         mmSocket.close();
-        //myLabel.setText("Bluetooth Closed");
     }
 }
